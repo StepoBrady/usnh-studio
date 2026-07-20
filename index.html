@@ -211,6 +211,8 @@
   #partner-home input[type=text]:focus{outline:none;border-color:var(--brand)}
   #partner-home .ph-x{align-self:flex-start;padding:8px 14px;border:1px solid var(--line2);border-radius:9px;background:none;color:var(--ink2);font:600 12px var(--f);cursor:pointer}
   #partner-home .ph-x:hover{border-color:#c0392b;color:#e07a6a}
+  .linkish{background:none;border:none;color:var(--ink3);text-decoration:underline;cursor:pointer;font:11.5px var(--f);padding:0}
+  .linkish:hover{color:var(--ink2)}
 
   /* ============ layout variations (text position) ============ */
   #stage.tp-top .t-stat,#stage.tp-top .t-quote,#stage.tp-top .t-ann,#stage.tp-top .t-poster,#stage.tp-top .t-split .pane{justify-content:flex-start;padding-top:calc(var(--pad) + 150px)}
@@ -1041,8 +1043,13 @@ function partnerLogoFile(file, done){
 }
 function renderPartnerHome(){
   const box=$('partner-home'); if(!box) return;
-  if(!partner.on){ box.classList.add('hidden'); return; }
   box.classList.remove('hidden');
+  if(!partner.on){
+    box.innerHTML='<div class="idea-h">🤝 Working with an employer partner? <span class="idea-sub">— co-brand every visual with their logo</span></div>'
+      +'<button class="go" type="button" id="ph-enable" style="margin-left:0;margin-top:2px">Set up partner co-branding →</button>';
+    $('ph-enable').addEventListener('click', ()=>{ partner.on=true; savePartner(); renderPartnerHome(); });
+    return;
+  }
   box.innerHTML='<div class="idea-h">🤝 Your company on every visual <span class="idea-sub">— upload once, co-branded on every PNG and MP4</span></div>'
     +'<div class="ph-row">'
     +(partner.logo ? '<span class="ph-chip"><img src="'+partner.logo+'"></span>' : '')
@@ -1052,11 +1059,13 @@ function renderPartnerHome(){
     +'</div>'
     +(partner.logo ? '<button class="ph-x" id="ph-clear" type="button">Remove logo</button>' : '')
     +'</div>'
-    +'<div class="hint">Your logo sits on a white chip next to the campus logo, so it works on every background. Saved only in this browser.</div>';
+    +'<div class="hint">Your logo sits on a white chip next to the campus logo, so it works on every background. Saved only in this browser. '
+    +'<button class="linkish" id="ph-off" type="button">Turn off partner mode</button></div>';
   $('ph-name').value = partner.name||'';
   $('ph-name').addEventListener('input', e=>{ partner.name=e.target.value; savePartner(); });
   $('ph-logo').addEventListener('change', e=>partnerLogoFile(e.target.files[0], renderPartnerHome));
   const c=$('ph-clear'); if(c) c.addEventListener('click', ()=>{ partner.logo=null; savePartner(); renderPartnerHome(); });
+  $('ph-off').addEventListener('click', ()=>{ partner.on=false; savePartner(); renderPartnerHome(); });
 }
 
 /* ================= layout shuffle ================= */
