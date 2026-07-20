@@ -6,6 +6,7 @@
 <title>USNH Studio — campus visual designer</title>
 <link rel="stylesheet" href="vendor/fonts-inline.css">
 <script src="vendor/html2canvas.min.js"></script>
+<script src="vendor/mp4-muxer.min.js"></script>
 <script src="logos.js?v=2"></script>
 <style>
   :root{
@@ -177,6 +178,31 @@
   .tagchips button:hover{border-color:var(--brand)}
   .tagchips button.on{background:var(--brand);border-color:var(--brand);color:#fff}
 
+  /* ============ animation export ============ */
+  .anim-len-row{display:flex;justify-content:space-between;align-items:center;margin:12px 0 4px;font-weight:600;font-size:12.5px;color:#374151}
+  .anim-len-row b{font-weight:800;color:#111}
+  #anim-msg{text-align:left;margin-top:8px}
+  #anim-preview video{width:100%;border-radius:12px;background:#000;display:block}
+
+  /* ============ partner co-brand ============ */
+  .pc-preview{margin-top:8px;padding:10px;border:1px solid #e5e3dc;border-radius:10px;background:#fff;text-align:center}
+  .pc-preview img{max-height:52px;max-width:100%;object-fit:contain}
+  /* stage lockup: partner logo on a white chip so any logo works on any background */
+  .st-cb{display:flex;align-items:center;gap:24px}
+  .st-cb .cbchip{background:#fff;border-radius:16px;padding:14px 24px;display:flex;align-items:center;box-shadow:0 4px 22px rgba(0,0,0,.18)}
+  .st-cb .cbchip img{height:58px;width:auto;max-width:320px;object-fit:contain;display:block}
+  .st-cb .cbchip b{font:800 30px var(--fh);color:#14181d;white-space:nowrap;letter-spacing:-.01em}
+  .st-cb .cbdiv{width:2px;height:60px;background:rgba(255,255,255,.5);border-radius:1px;flex:0 0 auto}
+  #stage.bg-paper .st-cb .cbdiv{background:#d8d4c8}
+  .st-cb .cblogo{display:flex;align-items:center}
+  .st-cb .cblogo img,.st-cb .cblogo svg{height:68px;width:auto;display:block}
+
+  /* hide foreground for the animation's background-layer capture */
+  #stage.cap-bg .st-logo,#stage.cap-bg .st-usnh,
+  #stage.cap-bg .t-stat>*,#stage.cap-bg .t-photo .tx,#stage.cap-bg .t-split .pane>*,
+  #stage.cap-bg .t-quote>*,#stage.cap-bg .t-ann>*,#stage.cap-bg .t-poster>*{visibility:hidden}
+  #stage.cap-bg .t-stat::before,#stage.cap-bg .t-split .pane::before{visibility:hidden}
+
   /* stage area */
   .stage-area{flex:1;overflow-y:auto;padding:26px;display:flex;flex-direction:column;align-items:center;gap:14px;background:radial-gradient(120% 80% at 50% -10%,#171b22,#0e1014)}
   .stage-wrap{border-radius:10px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.55);background:#000;position:relative;flex:0 0 auto}
@@ -328,9 +354,9 @@
     <div class="school-seg" id="school-seg-home"></div>
   </div>
   <div class="home">
-    <div class="eyebrow">USNH Campus Content Studio</div>
+    <div class="eyebrow" id="home-eyebrow">USNH Campus Content Studio</div>
     <h1>What are you making?</h1>
-    <p class="lede">On-brand visuals for Keene State, Plymouth State, and UNH — pick a template, and the whole
+    <p class="lede" id="home-lede">On-brand visuals for Keene State, Plymouth State, and UNH — pick a template, and the whole
       workspace rebrands to the campus you choose. Everything stays on your computer.</p>
 
     <div class="idea">
@@ -392,6 +418,11 @@
           <svg class="car" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9aa1ab" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg></div>
         <div class="acc-body">
           <button class="btn pri" id="btn-export2">Download PNG</button>
+          <button class="btn" id="btn-anim" type="button" style="margin-top:8px">🎬 Preview animation</button>
+          <div class="anim-len-row"><span>Video length</span><b id="anim-dur">4.0s</b></div>
+          <input id="anim-len" type="range" min="3" max="20" step="0.5" value="4">
+          <div class="foot-note" id="anim-msg" style="display:none"></div>
+          <div id="anim-preview" style="display:none;margin-top:10px"></div>
           <label>Post caption</label>
           <textarea id="caption-out" rows="6" readonly></textarea>
           <button class="btn" id="copy-caption" style="margin-top:8px">Copy caption</button>
@@ -477,7 +508,7 @@ let S = null;               // active template state {size,bg,overlay,photo,focu
 
 function defState(t){
   return { size:'square', bg:(TPLS[t].bgs||['brand'])[0], overlay:'gradient', photo:null, focus:50,
-    usnh:true, fields:{} };
+    usnh:true, animSecs:4, fields:{} };
 }
 function loadDraft(t){ try{ const s = localStorage.getItem(LS.draft+t); return s?JSON.parse(s):null; }catch(e){ return null; } }
 function saveDraft(){ if(!tpl||!S) return; try{ localStorage.setItem(LS.draft+tpl, JSON.stringify({when:Date.now(),school,state:S})); }catch(e){} }
@@ -617,6 +648,44 @@ function buildPanel(){
   chk.innerHTML='<input type="checkbox" '+(S.usnh?'checked':'')+'> Show “A University System of New Hampshire story”';
   chk.querySelector('input').onchange = e => { S.usnh=e.target.checked; render(); };
   ST.appendChild(chk);
+
+  // partner co-brand controls
+  const pchk=document.createElement('label'); pchk.className='check';
+  pchk.innerHTML='<input type="checkbox" '+(partner.on?'checked':'')+'> Co-brand with an employer partner';
+  const pfields=document.createElement('div'); pfields.className=partner.on?'':'hidden';
+  pchk.querySelector('input').onchange = e => { partner.on=e.target.checked; savePartner();
+    pfields.classList.toggle('hidden', !partner.on); render(); };
+  ST.appendChild(pchk); ST.appendChild(pfields);
+
+  const pll=document.createElement('label'); pll.innerHTML='Partner logo <span class="opt">(shown on a white chip so any logo works)</span>'; pfields.appendChild(pll);
+  const pf=document.createElement('input'); pf.type='file'; pf.accept='image/*';
+  pf.onchange = e => { const file=e.target.files[0]; if(!file) return;
+    const r=new FileReader();
+    r.onload=()=>{
+      if(file.type==='image/svg+xml'){ partner.logo=r.result; savePartner(); buildPanel(); render(); return; }
+      const im=new Image();
+      im.onload=()=>{ const h=Math.min(400,im.height), w=im.width/im.height*h;
+        const c=document.createElement('canvas'); c.width=w; c.height=h;
+        c.getContext('2d').drawImage(im,0,0,w,h);
+        partner.logo=c.toDataURL('image/png'); savePartner(); buildPanel(); render(); };
+      im.src=r.result; };
+    r.readAsDataURL(file); };
+  pfields.appendChild(pf);
+  if(partner.logo){
+    const pv=document.createElement('div'); pv.className='pc-preview';
+    pv.innerHTML='<img src="'+partner.logo+'"><button class="btn" type="button" style="margin-top:8px">Remove logo</button>';
+    pv.querySelector('button').onclick=()=>{ partner.logo=null; savePartner(); buildPanel(); render(); };
+    pfields.appendChild(pv);
+  }
+  const pnl=document.createElement('label'); pnl.innerHTML='Partner name <span class="opt">(used in the caption; on the visual until a logo is added)</span>'; pfields.appendChild(pnl);
+  const pn=document.createElement('input'); pn.type='text'; pn.placeholder='e.g. Hypertherm';
+  pn.value=partner.name||'';
+  pn.oninput=()=>{ partner.name=pn.value; savePartner(); render(); };
+  pfields.appendChild(pn);
+
+  // animation length slider sync
+  const al=$('anim-len'), ad=$('anim-dur');
+  if(al){ al.value=+S.animSecs||4; if(ad) ad.textContent=(+al.value).toFixed(1)+'s'; }
 }
 
 function seg(labText, opts, cur, cb){
@@ -681,6 +750,10 @@ async function render(){
   const colorLogo = await logoHTML(false);
 
   const usnhLine = S.usnh ? '<div class="st-usnh">A University System of New Hampshire story</div>' : '';
+  // partner co-brand: wrap the campus logo in a lockup when a partner is set
+  const cb = lg => partnerOn()
+    ? '<div class="st-cb">'+partnerChip()+'<span class="cbdiv"></span><span class="cblogo">'+lg+'</span></div>'
+    : lg;
   const photoBg = S.photo ? 'style="background-image:url('+S.photo+');background-position:50% '+S.focus+'%"' : '';
   const phEmpty = S.photo ? '' : '<div class="ph-empty">Add a photo in Style →</div>';
 
@@ -691,7 +764,7 @@ async function render(){
       + '<div class="l">'+esc(val('label'))+'</div>'
       + (val('support')?'<div class="s">'+esc(val('support'))+'</div>':'')
       + (val('source')?'<div class="src">Source: '+esc(val('source'))+'</div>':'')
-      + '</div><div class="st-logo">'+logo+'</div>'+usnhLine;
+      + '</div><div class="st-logo">'+cb(logo)+'</div>'+usnhLine;
   }
   else if(tpl==='photo'){
     html = '<div class="t-photo">'
@@ -710,7 +783,7 @@ async function render(){
       + (val('tag')?'<span class="st-tag" style="align-self:flex-start">'+esc(val('tag'))+'</span>':'')
       + '<div class="hl">'+esc(val('headline'))+'</div>'
       + (val('support')?'<div class="sub">'+esc(val('support'))+'</div>':'')
-      + '<div class="st-plogo">'+(paper?colorLogo:logo)+'</div>'
+      + '<div class="st-plogo">'+cb(paper?colorLogo:logo)+'</div>'
       + '</div></div>';
   }
   else if(tpl==='quote'){
@@ -719,7 +792,7 @@ async function render(){
       + '<div class="q">'+esc(val('quote'))+'</div>'
       + '<div class="who"><span class="bar"></span><div><div class="nm">'+esc(val('name'))+'</div>'
       + (val('role')?'<div class="rl">'+esc(val('role'))+'</div>':'')+'</div></div>'
-      + '</div><div class="st-logo" style="top:auto;bottom:52px;left:auto;right:var(--pad)">'+(paper?colorLogo:logo)+'</div>'
+      + '</div><div class="st-logo" style="top:auto;bottom:52px;left:auto;right:var(--pad)">'+cb(paper?colorLogo:logo)+'</div>'
       + (S.usnh?'<div class="st-usnh">A University System of New Hampshire story</div>':'');
   }
   else if(tpl==='ann'){
@@ -731,14 +804,14 @@ async function render(){
       + (chips?'<div class="chips">'+chips+'</div>':'')
       + (val('support')?'<div class="det">'+esc(val('support'))+'</div>':'')
       + (val('cta')?'<div class="cta">'+esc(val('cta'))+'</div>':'')
-      + '</div><div class="st-logo" style="top:auto;bottom:52px;left:auto;right:var(--pad)">'+(paper?colorLogo:logo)+'</div>';
+      + '</div><div class="st-logo" style="top:auto;bottom:52px;left:auto;right:var(--pad)">'+cb(paper?colorLogo:logo)+'</div>';
   }
   else if(tpl==='poster'){
     html = '<div class="t-poster">'
       + '<div class="bar"></div>'
       + '<div class="hl">'+esc(val('headline'))+'</div>'
       + (val('support')?'<div class="sub">'+esc(val('support'))+'</div>':'')
-      + '</div><div class="st-logo" style="top:auto;bottom:52px;left:auto;right:var(--pad)">'+(paper?colorLogo:logo)+'</div>'
+      + '</div><div class="st-logo" style="top:auto;bottom:52px;left:auto;right:var(--pad)">'+cb(paper?colorLogo:logo)+'</div>'
       + (S.usnh?'<div class="st-usnh">A University System of New Hampshire story</div>':'');
   }
   st.innerHTML = html;
@@ -770,6 +843,7 @@ function buildCaption(){
   if(fdl.support) p.push(fdl.support);
   if(fdl.attr||fdl.name) p.push('— '+(fdl.attr||fdl.name+(fdl.role?', '+fdl.role:'')));
   p.push('A University System of New Hampshire story.');
+  if(partnerOn() && partner.name) p.push('In partnership with '+partner.name+'.');
   p.push(SCHOOLS[school].tag+' #USNH #NHWorkforce #NewHampshire');
   $('caption-out').value = p.join('\n\n');
 }
@@ -827,7 +901,8 @@ function genSystem(){
     +'- ann: tag (eyebrow, <=20), headline (<=55), chip1/chip2/chip3 (short details: a date, a time, a place), support (<=150, optional), cta (optional)\n'
     +'- poster: headline (<=60, one bold statement), support (<=140, optional)\n'
     +'Only fill fields that belong to the chosen template. When a tag fits one of these, prefer it verbatim: '+TAG_PRESETS.join(', ')+'.\n'
-    +'If you invent a statistic, keep it plausible and name a realistic source (e.g. "First-Destination Survey") so the user can verify before posting.';
+    +'If you invent a statistic, keep it plausible and name a realistic source (e.g. "First-Destination Survey") so the user can verify before posting.'
+    +(partnerOn() ? '\nThis visual is co-branded with employer partner "'+(partner.name||'the partner company')+'". Tell the employer-partnership side of the story: hiring, internships, co-designed projects, the workforce pipeline between the campus and the company.' : '');
 }
 
 function applyGenerated(obj){
@@ -905,6 +980,141 @@ for(const id of ['idea-key','ai-key']){
   el.addEventListener('input', e=>saveAiKey(e.target.value));
 }
 syncKeyRows();
+
+/* ================= partner co-brand state ================= */
+const PARTNER_LS='usnhStudio.partner';
+let partner=(function(){ try{ return Object.assign({on:false,name:'',logo:null}, JSON.parse(localStorage.getItem(PARTNER_LS)||'{}')); }catch(e){ return {on:false,name:'',logo:null}; } })();
+function savePartner(){ try{ localStorage.setItem(PARTNER_LS, JSON.stringify(partner)); }catch(e){} }
+function partnerOn(){ return !!(partner.on && (partner.logo || (partner.name&&partner.name.trim()))); }
+function partnerChip(){
+  return partner.logo
+    ? '<span class="cbchip"><img src="'+partner.logo+'"></span>'
+    : '<span class="cbchip"><b>'+esc(partner.name.trim())+'</b></span>';
+}
+
+/* ================= animation → MP4 ================= */
+let animOut={url:null,blob:null,ext:'mp4'};
+const easeOutC=x=>1-Math.pow(1-x,3);
+const clamp01=x=>Math.max(0,Math.min(1,x));
+
+async function captureStageLayers(){
+  const st=$('stage'), sz=SIZES[S.size], prev=st.style.transform;
+  st.style.transform='none';
+  try{
+    const full=await html2canvas(st,{width:sz.w,height:sz.h,scale:1,backgroundColor:null,useCORS:true});
+    st.classList.add('cap-bg');
+    const bg=await html2canvas(st,{width:sz.w,height:sz.h,scale:1,backgroundColor:null,useCORS:true});
+    return {full,bg,w:sz.w,h:sz.h};
+  } finally { st.classList.remove('cap-bg'); st.style.transform=prev; }
+}
+async function logoBitmap(){
+  const html=await logoHTML(true);
+  const host=document.createElement('div');
+  host.style.cssText='position:fixed;left:-9999px;top:0;background:transparent;display:flex;align-items:center';
+  host.innerHTML=html;
+  const im=host.querySelector('img,svg'); if(im){ im.style.height='160px'; im.style.width='auto'; }
+  document.body.appendChild(host);
+  try{ return await html2canvas(host,{backgroundColor:null,scale:1}); }
+  finally{ host.remove(); }
+}
+function drawAnimFrame(ctx,L,p,W,H){
+  const sc=SCHOOLS[school];
+  ctx.globalAlpha=1; ctx.fillStyle=sc.color; ctx.fillRect(0,0,W,H);
+  const z=1+0.05*p, dw=W*z, dh=H*z, dx=-(dw-W)/2, dy=-(dh-H)/2;
+  ctx.globalAlpha=easeOutC(clamp01(p/0.10)); ctx.drawImage(L.bg,dx,dy,dw,dh);
+  ctx.globalAlpha=easeOutC(clamp01((p-0.10)/0.25)); ctx.drawImage(L.full,dx,dy,dw,dh);
+  ctx.globalAlpha=1;
+}
+function drawOutroFrame(ctx,q,W,H,logoC){
+  const sc=SCHOOLS[school];
+  ctx.globalAlpha=1; ctx.fillStyle=sc.dark; ctx.fillRect(0,0,W,H);
+  const a=easeOutC(clamp01(q/0.32)), s=0.92+0.08*a;
+  ctx.globalAlpha=a;
+  if(logoC){ const lh=Math.round(H*0.085)*s, lw=logoC.width/logoC.height*lh;
+    ctx.drawImage(logoC,(W-lw)/2,H*0.46-lh,lw,lh); }
+  ctx.fillStyle='rgba(255,255,255,.85)'; ctx.textAlign='center';
+  ctx.font='500 '+Math.round(W*0.023)+'px "Public Sans",system-ui,sans-serif';
+  ctx.fillText('A University System of New Hampshire story', W/2, H*0.46+Math.round(H*0.055));
+  ctx.textAlign='left'; ctx.globalAlpha=1;
+}
+async function encodeVideo(mainSec,setMsg){
+  const fps=30, outroSec=1.2;
+  if(setMsg)setMsg('Capturing frames…');
+  const L=await captureStageLayers(); const W=L.w, H=L.h;
+  const logoC=await logoBitmap().catch(()=>null);
+  const cv=document.createElement('canvas'); cv.width=W; cv.height=H; const ctx=cv.getContext('2d');
+  const mainF=Math.max(2,Math.round(mainSec*fps)), outroF=Math.round(outroSec*fps), total=mainF+outroF;
+  const frame=f=>{ if(f<mainF) drawAnimFrame(ctx,L,f/(mainF-1),W,H); else drawOutroFrame(ctx,(f-mainF)/(outroF-1),W,H,logoC); };
+  if(('VideoEncoder' in window) && window.Mp4Muxer){
+    try{
+      const {Muxer,ArrayBufferTarget}=window.Mp4Muxer;
+      const muxer=new Muxer({target:new ArrayBufferTarget(),video:{codec:'avc',width:W,height:H},fastStart:'in-memory'});
+      const enc=new VideoEncoder({output:(c,m)=>muxer.addVideoChunk(c,m),error:e=>console.error('enc',e)});
+      enc.configure({codec:'avc1.640028',width:W,height:H,bitrate:9_000_000,framerate:fps});
+      for(let f=0;f<total;f++){
+        frame(f);
+        const bmp=await createImageBitmap(cv);
+        const vf=new VideoFrame(bmp,{timestamp:Math.round(f*1e6/fps),duration:Math.round(1e6/fps)});
+        enc.encode(vf,{keyFrame:f%30===0}); vf.close(); bmp.close();
+        if(enc.encodeQueueSize>8) await new Promise(r=>setTimeout(r,15));
+        if(f%6===0&&setMsg)setMsg('Rendering… '+Math.round(f/total*100)+'%');
+      }
+      await enc.flush(); muxer.finalize();
+      return {blob:new Blob([muxer.target.buffer],{type:'video/mp4'}),ext:'mp4'};
+    }catch(e){ console.error(e); if(setMsg)setMsg('MP4 unsupported here — trying WebM…'); }
+  }
+  try{
+    const stream=cv.captureStream(0), track=stream.getVideoTracks()[0];
+    const mime=MediaRecorder.isTypeSupported('video/webm;codecs=vp9')?'video/webm;codecs=vp9':'video/webm';
+    const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:9_000_000}), chunks=[];
+    rec.ondataavailable=e=>{ if(e.data.size)chunks.push(e.data); };
+    const done=new Promise(r=>rec.onstop=r); rec.start();
+    for(let f=0;f<total;f++){ frame(f);
+      if(track.requestFrame)track.requestFrame();
+      await new Promise(r=>setTimeout(r,1000/fps));
+      if(f%6===0&&setMsg)setMsg('Rendering… '+Math.round(f/total*100)+'%'); }
+    rec.stop(); await done;
+    return {blob:new Blob(chunks,{type:'video/webm'}),ext:'webm'};
+  }catch(e){ console.error(e); return null; }
+}
+async function previewAnim(){
+  const btn=$('btn-anim'), msg=$('anim-msg'), box=$('anim-preview');
+  const setMsg=s=>{ msg.style.display='block'; msg.textContent=s; };
+  const mainSec=Math.max(3,Math.min(20,+S.animSecs||4));
+  const old=btn.textContent; btn.disabled=true; btn.textContent='🎬 Rendering…';
+  try{
+    const res=await encodeVideo(mainSec,setMsg);
+    if(!res||!res.blob){ setMsg('Animation export failed on this browser.'); return; }
+    if(animOut.url)URL.revokeObjectURL(animOut.url);
+    animOut={url:URL.createObjectURL(res.blob),blob:res.blob,ext:res.ext};
+    box.style.display='block';
+    box.innerHTML='<video src="'+animOut.url+'" autoplay loop muted playsinline controls></video>'
+      +'<button class="btn" id="anim-dl" type="button" style="margin-top:8px">⬇ Download '+res.ext.toUpperCase()+' · '+mainSec.toFixed(1)+'s</button>';
+    $('anim-dl').addEventListener('click',()=>{
+      const a=document.createElement('a'); a.href=animOut.url;
+      a.download='usnh-'+school+'-'+tpl+'-'+S.size+'.'+animOut.ext; a.click();
+      $('anim-dl').textContent='Saved ✓';
+      setTimeout(()=>{ const d=$('anim-dl'); if(d)d.textContent='⬇ Download '+animOut.ext.toUpperCase()+' · '+mainSec.toFixed(1)+'s'; },1600);
+    });
+    setMsg('Preview ready — adjust the length and re-render, or download.');
+  }catch(e){ console.error(e); setMsg('Animation export failed.'); }
+  finally{ btn.disabled=false; btn.textContent=old; }
+}
+$('btn-anim').addEventListener('click', previewAnim);
+$('anim-len').addEventListener('input', e=>{
+  if(S) S.animSecs=parseFloat(e.target.value);
+  const ad=$('anim-dur'); if(ad)ad.textContent=parseFloat(e.target.value).toFixed(1)+'s';
+});
+
+/* ================= partner entry link (?partner=1) ================= */
+if(/[?&]partner\b/.test(location.search)){
+  partner.on=true; savePartner();
+}
+if(partner.on){
+  const ey=$('home-eyebrow'), le=$('home-lede');
+  if(ey) ey.textContent='USNH Partner Content Studio';
+  if(le) le.textContent='Co-branded visuals for your company and the campus you hire from — upload your logo once, pick a template, and every export carries both marks. Everything stays on your computer.';
+}
 
 /* ================= init ================= */
 setSchool(school);
