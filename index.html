@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>USNH Studio — campus visual designer</title>
+<link rel="stylesheet" href="vendor/fonts-inline.css">
+<script src="vendor/html2canvas.min.js"></script>
+<script src="logos.js?v=2"></script>
+<style>
+  :root{
+    --ink:#f2f3f5;--ink2:#a6adb8;--ink3:#737a85;
+    --bg:#0e1014;--bg2:#151920;--bg3:#1c212a;--line:#232833;--line2:#2e3542;
+    --f:'Public Sans',system-ui,-apple-system,sans-serif;
+    --fh:'Archivo',system-ui,sans-serif;
+    --panel:#ffffff;--panel-ink:#1a1d21;--panel-line:#e5e3dc;--panel-bg:#fafaf8;
+    --brand:#003591;--brand-dark:#00193f;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{font-family:var(--f);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  button{font-family:inherit}
+  .hidden{display:none!important}
+
+  /* ============ top bar ============ */
+  .topbar{display:flex;align-items:center;gap:14px;padding:13px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:30}
+  .topbar .mk{display:flex;align-items:center;gap:10px;cursor:pointer}
+  .topbar .mk .mkdot{display:flex;gap:3px}
+  .topbar .mk .mkdot i{width:9px;height:9px;border-radius:50%;display:block}
+  .topbar .mk .mkdot i:nth-child(1){background:#C8102E}
+  .topbar .mk .mkdot i:nth-child(2){background:#00573F}
+  .topbar .mk .mkdot i:nth-child(3){background:#3560b4}
+  .topbar .mk b{font-family:var(--fh);font-weight:800;font-size:15.5px;letter-spacing:-.01em}
+  .ws-back{display:flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid var(--line2);border-radius:999px;background:var(--bg2);color:var(--ink);font:600 13px var(--f);cursor:pointer}
+  .ws-back:hover{border-color:#3d4552;background:var(--bg3)}
+  .school-seg{display:flex;gap:4px;background:var(--bg2);border:1px solid var(--line2);border-radius:999px;padding:4px}
+  .school-seg button{border:none;background:none;color:var(--ink2);padding:7px 14px;border-radius:999px;font:700 12.5px var(--f);cursor:pointer;display:flex;align-items:center;gap:7px}
+  .school-seg button .sd{width:8px;height:8px;border-radius:50%;display:block}
+  .school-seg button.on{background:#fff;color:#14181d}
+  .topbar .sp{flex:1}
+  .btn-export{display:flex;align-items:center;gap:9px;padding:10px 20px;border-radius:11px;border:none;background:var(--brand);color:#fff;font-weight:800;font-size:13.5px;cursor:pointer}
+  .btn-export:hover{filter:brightness(1.12)}
+
+  /* ============ home ============ */
+  .home{max-width:1060px;margin:0 auto;padding:46px 24px 80px}
+  .home .eyebrow{font-size:12px;letter-spacing:.16em;color:var(--ink3);text-transform:uppercase;font-weight:700}
+  .home h1{font-family:var(--fh);font-size:40px;font-weight:800;letter-spacing:-.03em;margin:10px 0 6px;text-wrap:balance}
+  .home .lede{font-size:16px;color:var(--ink2);max-width:600px;margin:0 0 30px;line-height:1.55}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .card{position:relative;border:1px solid var(--line2);border-radius:16px;cursor:pointer;background:var(--bg2);transition:border-color .15s,transform .15s;padding:18px;text-align:left}
+  .card:hover{border-color:#455066;transform:translateY(-2px)}
+  .card .tico{width:46px;height:46px;border-radius:11px;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+  .card .tico svg{width:24px;height:24px}
+  .card .cname{font-family:var(--fh);font-weight:700;font-size:16px}
+  .card .cdesc{color:var(--ink2);font-size:12.5px;margin-top:4px;line-height:1.45}
+  .home-sec{margin-top:38px}
+  .home-sec h2{font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--ink2);margin:0 0 13px;text-transform:uppercase}
+  .continue{display:flex;gap:10px;flex-wrap:wrap}
+  .continue .empty{color:var(--ink3);font-size:13px}
+  .draft{position:relative;min-width:200px;max-width:260px;border:1px solid var(--line2);border-radius:12px;cursor:pointer;background:var(--bg2);padding:13px 14px}
+  .draft:hover{border-color:#455066}
+  .draft .dtop{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px}
+  .draft .dtop .sd{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+  .draft .dsnip{color:var(--ink2);font-size:12px;margin-top:6px;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .draft .dmeta{color:var(--ink3);font-size:10.5px;margin-top:8px;text-transform:uppercase;letter-spacing:.06em}
+  .draft .dx{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;border:none;background:rgba(0,0,0,.5);color:#fff;font-size:13px;cursor:pointer;display:none;align-items:center;justify-content:center;line-height:1}
+  .draft:hover .dx{display:flex}
+  .draft .dx:hover{background:#c0392b}
+
+  /* ============ workspace ============ */
+  .ws{display:flex;height:calc(100vh - 61px);overflow:hidden}
+  .panel{width:404px;min-width:404px;background:var(--panel);color:var(--panel-ink);overflow-y:auto;border-right:1px solid #000}
+  .panel-in{padding:18px 20px 40px}
+  .acc{border:1px solid var(--panel-line);border-radius:14px;margin-bottom:12px;overflow:hidden;background:#fff}
+  .acc-head{display:flex;align-items:center;gap:12px;padding:15px 16px;cursor:pointer;user-select:none}
+  .acc-head .n{width:22px;height:22px;border-radius:50%;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:0 0 auto}
+  .acc-head .t{font-weight:700;font-size:14px}
+  .acc-head .sub{font-size:11.5px;color:#9aa1ab;margin-left:auto;text-align:right;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .acc-head .car{margin-left:8px;transition:transform .2s;flex:0 0 auto}
+  .acc.open .acc-head .car{transform:rotate(180deg)}
+  .acc.open .acc-head .sub{display:none}
+  .acc-body{display:none;padding:2px 16px 18px}
+  .acc.open .acc-body{display:block}
+
+  label{display:block;margin:13px 0 6px;font-weight:600;font-size:12.5px;color:#374151}
+  .opt{font-weight:400;color:#9aa1ab}
+  .count{float:right;color:#9aa1ab;font-weight:400;font-size:11px}
+  input[type=text],input[type=file],textarea{width:100%;padding:9px 12px;border:1px solid #d8dade;border-radius:10px;font-family:inherit;font-size:13.5px;background:var(--panel-bg);color:#1a1d21}
+  textarea{resize:vertical}
+  input:focus,textarea:focus{outline:none;border-color:#111;background:#fff}
+  input[type=range]{width:100%;accent-color:#111}
+  .row2{display:flex;gap:10px}.row2>*{flex:1;min-width:0}
+
+  .tpl-btn{display:flex;align-items:center;gap:12px;width:100%;padding:11px;border:1px solid #d8dade;border-radius:12px;background:var(--panel-bg);cursor:pointer;margin-bottom:4px}
+  .tpl-btn:hover{border-color:#111}
+  .tpl-btn .tico{width:42px;height:42px;border-radius:9px;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .tpl-btn .tico svg{width:22px;height:22px}
+  .tpl-btn .tl{text-align:left}.tpl-btn .tl b{display:block;font-size:13.5px}.tpl-btn .tl span{font-size:11.5px;color:#9aa1ab}
+  .tpl-btn .chg{margin-left:auto;font-size:11px;font-weight:700;color:#111;border:1px solid #d8dade;border-radius:7px;padding:5px 9px}
+
+  .seg{display:flex;gap:7px;margin-top:2px;flex-wrap:wrap}
+  .seg label{flex:1;margin:0;min-width:58px;display:flex;align-items:center;justify-content:center;padding:8px 6px;border:1px solid #d8dade;border-radius:9px;cursor:pointer;font-weight:600;font-size:12px;background:var(--panel-bg)}
+  .seg input{position:absolute;opacity:0;pointer-events:none}
+  .seg label.on{border-color:#111;background:#111;color:#fff}
+  .check{display:flex;align-items:center;gap:9px;margin-top:13px;font-weight:600;font-size:12.5px;color:#374151;cursor:pointer}
+  .check input{width:16px;height:16px;accent-color:#111;margin:0}
+
+  .btn{width:100%;padding:12px;border:1px solid #d8dade;border-radius:11px;background:var(--panel-bg);color:#1a1d21;font:700 13.5px var(--f);cursor:pointer;text-align:center}
+  .btn:hover{border-color:#111;background:#fff}
+  .btn.pri{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:800}
+  .btn.pri:hover{filter:brightness(1.1)}
+  .foot-note{margin-top:12px;text-align:center;font-size:11.5px;color:#9aa1ab}
+
+  /* stage area */
+  .stage-area{flex:1;overflow-y:auto;padding:26px;display:flex;flex-direction:column;align-items:center;gap:14px;background:radial-gradient(120% 80% at 50% -10%,#171b22,#0e1014)}
+  .stage-wrap{border-radius:10px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.55);background:#000;position:relative;flex:0 0 auto}
+  #stage{position:absolute;top:0;left:0;transform-origin:top left;font-family:var(--f)}
+  .pv-label{font-size:11.5px;color:var(--ink3);letter-spacing:.04em}
+
+  /* template modal */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:70;padding:24px}
+  .modal.on{display:flex}
+  .modal-in{background:#fff;color:#1a1d21;border-radius:18px;padding:20px;width:min(640px,94vw);max-height:84vh;overflow:auto}
+  .modal-in h3{margin:0 0 4px;font-size:17px;font-weight:800;font-family:var(--fh)}
+  .modal-in p{margin:0 0 16px;color:#6b7280;font-size:13px}
+  .tpl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+  .tpl-card{border:1px solid #e2e0d8;border-radius:13px;padding:16px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:9px;text-align:center;background:var(--panel-bg)}
+  .tpl-card:hover{border-color:#111;background:#fff}
+  .tpl-card.on{border-color:#111;background:#111;color:#fff}
+  .tpl-card .tico2{width:48px;height:48px;border-radius:11px;background:#111;color:#fff;display:flex;align-items:center;justify-content:center}
+  .tpl-card.on .tico2{background:var(--brand);color:#fff}
+  .tpl-card .tico2 svg{width:26px;height:26px}
+  .tpl-card b{font-size:13px}.tpl-card span{font-size:11px;color:#9aa1ab}
+  .tpl-card.on span{color:#c7ccd2}
+
+  @media(max-width:900px){
+    .home{padding:30px 18px 60px}
+    .home h1{font-size:31px}
+    .cards{grid-template-columns:1fr 1fr}
+    .ws{flex-direction:column;height:auto}
+    .panel{width:100%;min-width:0;border-right:none;border-top:1px solid #000;order:2}
+    .stage-area{order:1;flex:none;padding:16px;width:100%}
+    .topbar{gap:9px;padding:11px 12px;flex-wrap:wrap}
+    .school-seg button{padding:7px 10px;font-size:12px}
+  }
+  @media(max-width:560px){
+    .cards{grid-template-columns:1fr}
+    .topbar .mk b{display:none}
+    input[type=text],textarea{font-size:16px}
+    .tpl-grid{grid-template-columns:1fr 1fr}
+  }
+
+  /* ================================================================
+     STAGE — true-pixel templates. The #stage node is rendered at the
+     real export size and scaled down with a transform for preview.
+     ================================================================ */
+  #stage{background:var(--brand);color:#fff;overflow:hidden;position:absolute}
+  #stage,.st-abs{--pad:84px}
+  #stage.sz-wide{--pad:110px}
+  #stage *{margin:0}
+
+  /* backgrounds */
+  #stage.bg-brand{background:var(--brand)}
+  #stage.bg-deep{background:linear-gradient(150deg,var(--brand) 0%,var(--brand-dark) 78%)}
+  #stage.bg-paper{background:#fbfaf7;color:#14181d}
+
+  /* shared pieces */
+  .st-logo{position:absolute;top:var(--pad);left:var(--pad);height:86px;display:flex;align-items:center}
+  .st-logo img,.st-logo svg{height:86px;width:auto;display:block}
+  #stage.sz-story .st-logo{height:96px}#stage.sz-story .st-logo img,#stage.sz-story .st-logo svg{height:96px}
+  .st-usnh{position:absolute;left:var(--pad);bottom:52px;font-size:24px;letter-spacing:.02em;opacity:.82;font-weight:500}
+  #stage.bg-paper .st-usnh{color:#6b7482;opacity:1}
+  .st-tag{display:inline-block;font-weight:700;font-size:26px;letter-spacing:.14em;text-transform:uppercase;padding:12px 22px;border:3px solid rgba(255,255,255,.55);border-radius:100px}
+  #stage.bg-paper .st-tag{border-color:var(--brand);color:var(--brand)}
+
+  /* ---------- Big Stat ---------- */
+  .t-stat{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:var(--pad);padding-left:calc(var(--pad) + 46px)}
+  .t-stat::before{content:"";position:absolute;left:var(--pad);top:26%;bottom:26%;width:16px;border-radius:8px;background:rgba(255,255,255,.9)}
+  #stage.bg-paper .t-stat::before{background:var(--brand)}
+  .t-stat .v{font-family:var(--fh);font-weight:900;letter-spacing:-.04em;font-size:300px;line-height:.95}
+  .t-stat .l{font-family:var(--fh);font-weight:700;font-size:56px;margin-top:18px;letter-spacing:-.01em}
+  .t-stat .s{font-size:33px;line-height:1.45;margin-top:26px;max-width:82%;opacity:.92}
+  .t-stat .src{font-size:24px;margin-top:34px;opacity:.6}
+  #stage.sz-story .t-stat .v{font-size:340px}
+  #stage.sz-wide .t-stat .v{font-size:330px}
+  #stage.sz-wide .t-stat .s{max-width:62%}
+
+  /* ---------- Photo Statement ---------- */
+  .t-photo{position:absolute;inset:0}
+  .t-photo .ph{position:absolute;inset:0;background-size:cover;background-position:50% 50%}
+  .t-photo .ph-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:40px;font-weight:600;background:#20242b}
+  .t-photo .scrim{position:absolute;inset:0}
+  #stage[data-overlay="gradient"] .t-photo .scrim{background:linear-gradient(to top,rgba(8,10,14,.88) 0%,rgba(8,10,14,.42) 45%,rgba(8,10,14,.05) 75%)}
+  #stage[data-overlay="brand"] .t-photo .scrim{background:linear-gradient(to top,var(--brand-dark) 0%,transparent 80%);opacity:.93}
+  #stage[data-overlay="dark"] .t-photo .scrim{background:rgba(8,10,14,.55)}
+  #stage[data-overlay="none"] .t-photo .scrim{background:none}
+  .t-photo .tx{position:absolute;left:var(--pad);right:var(--pad);bottom:118px;text-shadow:0 2px 24px rgba(0,0,0,.35)}
+  .t-photo .hl{font-family:var(--fh);font-weight:800;font-size:88px;line-height:1.04;letter-spacing:-.02em;margin-top:30px;text-wrap:balance}
+  .t-photo .sub{font-size:34px;line-height:1.45;margin-top:24px;max-width:88%;opacity:.94}
+  .t-photo .attr{font-size:27px;margin-top:22px;opacity:.75;font-weight:600}
+  #stage.sz-wide .t-photo .hl{font-size:96px;max-width:72%}
+  #stage.sz-wide .t-photo .sub{max-width:62%}
+  #stage.sz-story .t-photo .tx{bottom:150px}
+
+  /* ---------- Split Panel ---------- */
+  .t-split{position:absolute;inset:0;display:flex;flex-direction:column}
+  #stage.sz-wide .t-split{flex-direction:row}
+  .t-split .ph{flex:1.15;background-size:cover;background-position:50% 50%;position:relative;min-height:0;min-width:0}
+  .t-split .ph .ph-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:40px;font-weight:600;background:#20242b}
+  .t-split .pane{flex:1;position:relative;display:flex;flex-direction:column;justify-content:center;padding:var(--pad);background:inherit}
+  .t-split .pane::before{content:"";position:absolute;left:0;right:0;top:0;height:16px;background:rgba(255,255,255,.85)}
+  #stage.sz-wide .t-split .pane::before{left:0;top:0;bottom:0;right:auto;width:16px;height:auto}
+  #stage.bg-paper .t-split .pane::before{background:var(--brand)}
+  .t-split .hl{font-family:var(--fh);font-weight:800;font-size:72px;line-height:1.06;letter-spacing:-.02em;margin-top:28px;text-wrap:balance}
+  .t-split .sub{font-size:31px;line-height:1.5;margin-top:22px;opacity:.92}
+  .t-split .pane .st-plogo{margin-top:44px;height:74px}
+  .t-split .pane .st-plogo img,.t-split .pane .st-plogo svg{height:74px;width:auto;display:block}
+  #stage.sz-story .t-split .ph{flex:1.35}
+
+  /* ---------- Quote ---------- */
+  .t-quote{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:var(--pad)}
+  .t-quote .qm{font-family:var(--fh);font-weight:900;font-size:220px;line-height:.6;height:110px;color:rgba(255,255,255,.85)}
+  #stage.bg-paper .t-quote .qm{color:var(--brand)}
+  .t-quote .q{font-family:var(--fh);font-weight:700;font-size:66px;line-height:1.18;letter-spacing:-.015em;text-wrap:balance;max-width:94%}
+  .t-quote .who{margin-top:52px;display:flex;align-items:center;gap:20px}
+  .t-quote .who .bar{width:56px;height:8px;border-radius:4px;background:rgba(255,255,255,.85)}
+  #stage.bg-paper .t-quote .who .bar{background:var(--brand)}
+  .t-quote .who .nm{font-weight:800;font-size:32px}
+  .t-quote .who .rl{font-size:28px;opacity:.72}
+  #stage.sz-wide .t-quote .q{font-size:74px;max-width:80%}
+
+  /* ---------- Announcement ---------- */
+  .t-ann{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:var(--pad)}
+  .t-ann .hl{font-family:var(--fh);font-weight:800;font-size:92px;line-height:1.03;letter-spacing:-.025em;margin-top:36px;text-wrap:balance}
+  .t-ann .chips{display:flex;gap:16px;flex-wrap:wrap;margin-top:44px}
+  .t-ann .chip{font-weight:700;font-size:29px;padding:16px 28px;border-radius:14px;background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.28)}
+  #stage.bg-paper .t-ann .chip{background:#f1efe8;border-color:#e0ddd2;color:#14181d}
+  .t-ann .det{font-size:32px;line-height:1.5;margin-top:38px;max-width:86%;opacity:.92}
+  .t-ann .cta{font-family:var(--fh);font-weight:800;font-size:36px;margin-top:46px}
+  .t-ann .cta::after{content:" →"}
+  #stage.bg-paper .t-ann .cta{color:var(--brand)}
+  #stage.sz-wide .t-ann .hl{max-width:80%}
+  #stage.sz-wide .t-ann .det{max-width:64%}
+
+  /* ---------- Headline Poster ---------- */
+  .t-poster{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:var(--pad)}
+  .t-poster .bar{width:120px;height:16px;border-radius:8px;background:rgba(255,255,255,.9)}
+  #stage.bg-paper .t-poster .bar{background:var(--brand)}
+  .t-poster .hl{font-family:var(--fh);font-weight:900;font-size:124px;line-height:1.0;letter-spacing:-.03em;margin-top:52px;text-wrap:balance}
+  .t-poster .sub{font-size:36px;line-height:1.5;margin-top:44px;max-width:84%;opacity:.9}
+  #stage.sz-wide .t-poster .hl{font-size:136px;max-width:88%}
+  #stage.sz-wide .t-poster .sub{max-width:60%}
+  #stage.sz-square .t-poster .hl,#stage.sz-portrait .t-poster .hl{font-size:112px}
+</style>
+</head>
+<body>
+
+<!-- ===================== HOME ===================== -->
+<div id="home">
+  <div class="topbar">
+    <div class="mk" onclick="goHome()"><span class="mkdot"><i></i><i></i><i></i></span><b>USNH Studio</b></div>
+    <div class="school-seg" id="school-seg-home"></div>
+  </div>
+  <div class="home">
+    <div class="eyebrow">USNH Campus Content Studio</div>
+    <h1>What are you making?</h1>
+    <p class="lede">On-brand visuals for Keene State, Plymouth State, and UNH — pick a template, and the whole
+      workspace rebrands to the campus you choose. Everything stays on your computer.</p>
+    <div class="cards" id="tpl-cards"></div>
+    <div class="home-sec">
+      <h2>Continue where you left off</h2>
+      <div class="continue" id="continue"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== WORKSPACE ===================== -->
+<div id="workspace" class="hidden">
+  <div class="topbar">
+    <button class="ws-back" onclick="goHome()" title="Back to home">← Home</button>
+    <div class="mk" onclick="goHome()"><span class="mkdot"><i></i><i></i><i></i></span><b>USNH Studio</b></div>
+    <div class="school-seg" id="school-seg-ws"></div>
+    <div class="sp"></div>
+    <button class="btn-export" id="btn-export">Export PNG</button>
+  </div>
+
+  <div class="ws">
+    <aside class="panel"><div class="panel-in">
+      <div class="acc open" data-step="create">
+        <div class="acc-head"><span class="n">1</span><span class="t">Create</span><span class="sub" id="sub-create"></span>
+          <svg class="car" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9aa1ab" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg></div>
+        <div class="acc-body">
+          <div id="tpl-mount"></div>
+          <div id="fields"></div>
+        </div>
+      </div>
+      <div class="acc" data-step="style">
+        <div class="acc-head"><span class="n">2</span><span class="t">Style</span><span class="sub">Size · background</span>
+          <svg class="car" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9aa1ab" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg></div>
+        <div class="acc-body"><div id="style-fields"></div></div>
+      </div>
+      <div class="acc" data-step="export">
+        <div class="acc-head"><span class="n">3</span><span class="t">Export</span><span class="sub">Download · caption</span>
+          <svg class="car" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9aa1ab" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg></div>
+        <div class="acc-body">
+          <button class="btn pri" id="btn-export2">Download PNG</button>
+          <label>Post caption</label>
+          <textarea id="caption-out" rows="6" readonly></textarea>
+          <button class="btn" id="copy-caption" style="margin-top:8px">Copy caption</button>
+          <p class="foot-note">Everything stays on your computer. Nothing is uploaded.</p>
+        </div>
+      </div>
+    </div></aside>
+
+    <main class="stage-area" id="stage-area">
+      <div class="stage-wrap" id="stage-wrap"><div id="stage"></div></div>
+      <div class="pv-label" id="pv-label"></div>
+    </main>
+  </div>
+</div>
+
+<!-- template modal -->
+<div class="modal" id="tpl-modal"><div class="modal-in">
+  <h3>Choose a template</h3><p>Every template is on-brand for whichever campus you pick. Your text comes with you.</p>
+  <div class="tpl-grid" id="tpl-grid"></div>
+</div></div>
+
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+
+/* ================= schools ================= */
+const SCHOOLS = {
+  ksc:{ name:'Keene State College', short:'Keene State', abbr:'KSC', color:'#C8102E', dark:'#5C0712', tag:'#KeeneState' },
+  psu:{ name:'Plymouth State University', short:'Plymouth State', abbr:'PSU', color:'#00573F', dark:'#002A1F', tag:'#PlymouthState' },
+  unh:{ name:'University of New Hampshire', short:'UNH', abbr:'UNH', color:'#003591', dark:'#00193F', tag:'#UNH' },
+};
+
+/* ================= templates ================= */
+const ICO = {
+  stat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+  photo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>',
+  split:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 3v18"/></svg>',
+  quote:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 8C7 8 5 10 5 12.5c0 2.2 1.7 4 3.9 4 .4 2-1 3-2.4 3.4l.6 1.6c3-.7 5.4-3 5.4-7C12.5 10.6 11.5 8 9.5 8zm9 0c-2.5 0-4.5 2-4.5 4.5 0 2.2 1.7 4 3.9 4 .4 2-1 3-2.4 3.4l.6 1.6c3-.7 5.4-3 5.4-7C21.5 10.6 20.5 8 18.5 8z"/></svg>',
+  ann:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l16-6v14L3 13v-2zM7 14v4a2 2 0 0 0 4 0v-3"/></svg>',
+  poster:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V5h16v2M12 5v14M8 19h8"/></svg>',
+};
+
+const TPLS = {
+  stat:{ name:'Big Stat', desc:'One number that carries the story', bgs:['brand','deep','paper'],
+    fields:[ ['value','Stat value','93%'], ['label','Stat label','of graduates working or in grad school'],
+             ['support','Supporting line <span class="opt">(optional)</span>','Within six months of Commencement — and most of them stay in New Hampshire.'],
+             ['source','Source <span class="opt">(optional)</span>','First-Destination Survey'] ] },
+  photo:{ name:'Photo Statement', desc:'Full-bleed photo with a bold headline', bgs:null,
+    fields:[ ['tag','Tag <span class="opt">(optional)</span>','Career Outcomes'],
+             ['headline','Headline','From the classroom to the control room'],
+             ['support','Supporting line <span class="opt">(optional)</span>','Nursing students log clinical hours from their very first year.'],
+             ['attr','Attribution <span class="opt">(optional)</span>','Sarah M. ’25 · Nursing'] ] },
+  split:{ name:'Split Panel', desc:'Photo on one side, message on the other', bgs:['brand','deep','paper'],
+    fields:[ ['tag','Tag <span class="opt">(optional)</span>','Employer Spotlight'],
+             ['headline','Headline','Hiring season starts here'],
+             ['support','Supporting line <span class="opt">(optional)</span>','Meet 400+ students at the fall career fair.'] ] },
+  quote:{ name:'Quote', desc:'A voice worth amplifying', bgs:['paper','brand','deep'],
+    fields:[ ['quote','Quote','The students we hire from here show up ready on day one.'],
+             ['name','Name','Jordan Reyes'], ['role','Role <span class="opt">(optional)</span>','Operations Director, Hypertherm'] ] },
+  ann:{ name:'Announcement', desc:'Event or news with the details up front', bgs:['brand','deep','paper'],
+    fields:[ ['tag','Eyebrow tag','Save the date'],
+             ['headline','Title','Fall Career & Internship Fair'],
+             ['chip1','Detail chip 1','Oct 14, 2026'], ['chip2','Detail chip 2','10 AM – 2 PM'], ['chip3','Detail chip 3 <span class="opt">(optional)</span>','Spaulding Gym'],
+             ['support','Details <span class="opt">(optional)</span>','120 employers across healthcare, manufacturing, education, and public service.'],
+             ['cta','Call to action <span class="opt">(optional)</span>','Register free in Handshake'] ] },
+  poster:{ name:'Headline Poster', desc:'Pure type. One big statement.', bgs:['brand','deep','paper'],
+    fields:[ ['headline','Statement','Made in New Hampshire. Hired in New Hampshire.'],
+             ['support','Supporting line <span class="opt">(optional)</span>','Our graduates power the state’s hospitals, schools, mills, and main streets.'] ] },
+};
+
+const SIZES = {
+  square:{ w:1080, h:1080, name:'Square', hint:'1080 × 1080' },
+  portrait:{ w:1080, h:1350, name:'Portrait', hint:'1080 × 1350' },
+  story:{ w:1080, h:1920, name:'Story', hint:'1080 × 1920' },
+  wide:{ w:1920, h:1080, name:'Wide', hint:'1920 × 1080' },
+};
+
+/* ================= state ================= */
+const LS = { school:'usnhStudio.school', draft:'usnhStudio.draft.' };
+let school = localStorage.getItem(LS.school) || 'unh';
+let tpl = null;             // active template id
+let S = null;               // active template state {size,bg,overlay,photo,focus,usnh,fields:{}}
+
+function defState(t){
+  return { size:'square', bg:(TPLS[t].bgs||['brand'])[0], overlay:'gradient', photo:null, focus:50,
+    usnh:true, fields:{} };
+}
+function loadDraft(t){ try{ const s = localStorage.getItem(LS.draft+t); return s?JSON.parse(s):null; }catch(e){ return null; } }
+function saveDraft(){ if(!tpl||!S) return; try{ localStorage.setItem(LS.draft+tpl, JSON.stringify({when:Date.now(),school,state:S})); }catch(e){} }
+function killDraft(t){ localStorage.removeItem(LS.draft+t); }
+
+/* ================= school switcher ================= */
+function schoolSeg(mountId){
+  const el = $(mountId); el.innerHTML='';
+  for(const k in SCHOOLS){
+    const b = document.createElement('button');
+    b.innerHTML = '<span class="sd" style="background:'+SCHOOLS[k].color+'"></span>'+SCHOOLS[k].abbr;
+    b.classList.toggle('on', k===school);
+    b.onclick = () => setSchool(k);
+    el.appendChild(b);
+  }
+}
+function setSchool(k){
+  school = k; localStorage.setItem(LS.school,k);
+  document.documentElement.style.setProperty('--brand', SCHOOLS[k].color);
+  document.documentElement.style.setProperty('--brand-dark', SCHOOLS[k].dark);
+  schoolSeg('school-seg-home'); schoolSeg('school-seg-ws');
+  if(tpl){ render(); }
+  renderContinue();
+}
+
+/* ================= home ================= */
+function goHome(){
+  saveDraft();
+  $('workspace').classList.add('hidden'); $('home').classList.remove('hidden');
+  tpl=null; S=null; renderContinue();
+}
+function openTpl(t, fromDraft){
+  tpl = t;
+  const d = fromDraft ? loadDraft(t) : null;
+  S = (d && d.state) ? d.state : (loadDraft(t)?.state || defState(t));
+  if(d && d.school) setSchool(d.school);
+  $('home').classList.add('hidden'); $('workspace').classList.remove('hidden');
+  buildPanel(); render();
+}
+function renderCards(){
+  const el = $('tpl-cards'); el.innerHTML='';
+  for(const t in TPLS){
+    const c = document.createElement('button'); c.className='card';
+    c.innerHTML = '<span class="tico">'+ICO[t]+'</span><span class="cname">'+TPLS[t].name+'</span><span class="cdesc">'+TPLS[t].desc+'</span>';
+    c.onclick = () => openTpl(t);
+    el.appendChild(c);
+  }
+}
+function draftSnippet(st){
+  const f = st.fields||{};
+  return f.headline || f.quote || (f.value ? f.value+' '+(f.label||'') : '') || '';
+}
+function renderContinue(){
+  const el = $('continue'); el.innerHTML='';
+  let any=false;
+  for(const t in TPLS){
+    const d = loadDraft(t); if(!d) continue; any=true;
+    const sc = SCHOOLS[d.school] || SCHOOLS[school];
+    const card = document.createElement('div'); card.className='draft';
+    card.innerHTML = '<div class="dtop"><span class="sd" style="background:'+sc.color+'"></span>'+TPLS[t].name+'</div>'
+      + '<div class="dsnip">'+(draftSnippet(d.state)||'Untitled draft')+'</div>'
+      + '<div class="dmeta">'+sc.abbr+' · '+SIZES[d.state.size].name+'</div>'
+      + '<button class="dx" title="Delete draft">×</button>';
+    card.onclick = e => { if(e.target.classList.contains('dx')){ killDraft(t); renderContinue(); } else openTpl(t, true); };
+    el.appendChild(card);
+  }
+  if(!any) el.innerHTML = '<div class="empty">Nothing yet — pick a template above to start.</div>';
+}
+
+/* ================= panel ================= */
+function openStep(step){ document.querySelectorAll('.acc').forEach(a=>a.classList.toggle('open',a.dataset.step===step)); }
+document.querySelectorAll('.acc-head').forEach(h=>h.addEventListener('click',()=>openStep(h.parentElement.dataset.step)));
+
+function buildPanel(){
+  const T = TPLS[tpl];
+  // template button
+  $('tpl-mount').innerHTML = '<button class="tpl-btn" onclick="openTplModal()">'
+    + '<span class="tico">'+ICO[tpl]+'</span>'
+    + '<span class="tl"><b>'+T.name+'</b><span>'+T.desc+'</span></span>'
+    + '<span class="chg">Change</span></button>';
+  $('sub-create').textContent = T.name;
+
+  // fields
+  const F = $('fields'); F.innerHTML='';
+  for(const [key,lab,ph] of T.fields){
+    const l = document.createElement('label'); l.innerHTML = lab; F.appendChild(l);
+    const multi = (key==='quote'||key==='support');
+    const inp = document.createElement(multi?'textarea':'input');
+    if(!multi) inp.type='text';
+    if(multi) inp.rows = key==='quote'?3:2;
+    inp.placeholder = ph;
+    inp.value = S.fields[key]||'';
+    inp.oninput = () => { S.fields[key]=inp.value; render(); };
+    F.appendChild(inp);
+  }
+
+  // style
+  const ST = $('style-fields'); ST.innerHTML='';
+  ST.appendChild(seg('Size', Object.keys(SIZES).map(k=>[k,SIZES[k].name]), S.size, v=>{ S.size=v; render(); }));
+  if(T.bgs) ST.appendChild(seg('Background', T.bgs.map(b=>[b,{brand:'Brand',deep:'Deep',paper:'Paper'}[b]]), S.bg, v=>{ S.bg=v; render(); }));
+  if(tpl==='photo'||tpl==='split'){
+    const l=document.createElement('label'); l.textContent='Photo'; ST.appendChild(l);
+    const f=document.createElement('input'); f.type='file'; f.accept='image/*';
+    f.onchange = e => { const file=e.target.files[0]; if(!file) return;
+      const r=new FileReader(); r.onload=()=>{ S.photo=r.result; render(); }; r.readAsDataURL(file); };
+    ST.appendChild(f);
+    const l2=document.createElement('label'); l2.textContent='Photo focus (up / down)'; ST.appendChild(l2);
+    const rg=document.createElement('input'); rg.type='range'; rg.min=0; rg.max=100; rg.value=S.focus;
+    rg.oninput = () => { S.focus=+rg.value; render(); }; ST.appendChild(rg);
+    if(tpl==='photo') ST.appendChild(seg('Overlay',[['gradient','Gradient'],['brand','Brand'],['dark','Dark'],['none','None']], S.overlay, v=>{ S.overlay=v; render(); }));
+  }
+  const chk=document.createElement('label'); chk.className='check';
+  chk.innerHTML='<input type="checkbox" '+(S.usnh?'checked':'')+'> Show “A University System of New Hampshire story”';
+  chk.querySelector('input').onchange = e => { S.usnh=e.target.checked; render(); };
+  ST.appendChild(chk);
+}
+
+function seg(labText, opts, cur, cb){
+  const wrap=document.createElement('div');
+  const l=document.createElement('label'); l.textContent=labText; wrap.appendChild(l);
+  const s=document.createElement('div'); s.className='seg';
+  for(const [v,name] of opts){
+    const lb=document.createElement('label'); lb.textContent=name;
+    lb.classList.toggle('on', v===cur);
+    lb.onclick = () => { s.querySelectorAll('label').forEach(x=>x.classList.remove('on')); lb.classList.add('on'); cb(v); };
+    s.appendChild(lb);
+  }
+  wrap.appendChild(s);
+  return wrap;
+}
+
+/* template modal */
+function openTplModal(){
+  const g=$('tpl-grid'); g.innerHTML='';
+  for(const t in TPLS){
+    const c=document.createElement('button'); c.className='tpl-card'+(t===tpl?' on':'');
+    c.innerHTML='<span class="tico2">'+ICO[t]+'</span><b>'+TPLS[t].name+'</b><span>'+TPLS[t].desc+'</span>';
+    c.onclick=()=>{ $('tpl-modal').classList.remove('on'); if(t!==tpl){ saveDraft(); carryText(t); openTpl(t); } };
+    g.appendChild(c);
+  }
+  $('tpl-modal').classList.add('on');
+}
+$('tpl-modal').addEventListener('click',e=>{ if(e.target.id==='tpl-modal') $('tpl-modal').classList.remove('on'); });
+// carry headline-ish text into the next template's draft
+function carryText(next){
+  const cur=S?S.fields:{}; const d=loadDraft(next); if(d&&draftSnippet(d.state)) return;
+  const st=defState(next);
+  const hl=cur.headline||cur.quote||cur.value||'';
+  if(hl){ if(next==='quote') st.fields.quote=hl; else if(next==='stat') st.fields.label=hl; else st.fields.headline=hl; }
+  if(cur.support) st.fields.support=cur.support;
+  localStorage.setItem(LS.draft+next, JSON.stringify({when:Date.now(),school,state:st}));
+}
+
+/* ================= stage render ================= */
+const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+let logoCache = {};   // key: school|white -> html
+function logoHTML(white){
+  const key = school+'|'+(white?1:0);
+  if(logoCache[key] !== undefined) return Promise.resolve(logoCache[key]);
+  return window.getLogoNode(school,{white}).then(h=>{ logoCache[key]=h||''; return logoCache[key]; });
+}
+
+function f(k,ph){ return S.fields[k] || ph || ''; }
+function phF(k){ const T=TPLS[tpl]; const row=T.fields.find(r=>r[0]===k); return row?row[2]:''; }
+function val(k){ return S.fields[k] || phF(k); }
+
+async function render(){
+  if(!tpl||!S) return;
+  const st = $('stage'), sz = SIZES[S.size];
+  st.style.width = sz.w+'px'; st.style.height = sz.h+'px';
+  st.className = 'sz-'+S.size+' bg-'+(TPLS[tpl].bgs?S.bg:'brand');
+  st.dataset.school = school; st.dataset.overlay = S.overlay;
+
+  const paper = TPLS[tpl].bgs && S.bg==='paper';
+  const whiteLogo = !paper;          // photo/brand/deep backgrounds get the white logo
+  const logo = await logoHTML(whiteLogo);
+  const colorLogo = await logoHTML(false);
+
+  const usnhLine = S.usnh ? '<div class="st-usnh">A University System of New Hampshire story</div>' : '';
+  const photoBg = S.photo ? 'style="background-image:url('+S.photo+');background-position:50% '+S.focus+'%"' : '';
+  const phEmpty = S.photo ? '' : '<div class="ph-empty">Add a photo in Style →</div>';
+
+  let html='';
+  if(tpl==='stat'){
+    html = '<div class="t-stat">'
+      + '<div class="v">'+esc(val('value'))+'</div>'
+      + '<div class="l">'+esc(val('label'))+'</div>'
+      + (val('support')?'<div class="s">'+esc(val('support'))+'</div>':'')
+      + (val('source')?'<div class="src">Source: '+esc(val('source'))+'</div>':'')
+      + '</div><div class="st-logo">'+logo+'</div>'+usnhLine;
+  }
+  else if(tpl==='photo'){
+    html = '<div class="t-photo">'
+      + '<div class="ph" '+photoBg+'>'+phEmpty+'</div><div class="scrim"></div>'
+      + '<div class="tx">'
+      + (val('tag')?'<span class="st-tag">'+esc(val('tag'))+'</span>':'')
+      + '<div class="hl">'+esc(val('headline'))+'</div>'
+      + (val('support')?'<div class="sub">'+esc(val('support'))+'</div>':'')
+      + (val('attr')?'<div class="attr">'+esc(val('attr'))+'</div>':'')
+      + '</div></div><div class="st-logo">'+logo+'</div>'+usnhLine;
+  }
+  else if(tpl==='split'){
+    html = '<div class="t-split">'
+      + '<div class="ph" '+photoBg+'>'+phEmpty+'</div>'
+      + '<div class="pane">'
+      + (val('tag')?'<span class="st-tag" style="align-self:flex-start">'+esc(val('tag'))+'</span>':'')
+      + '<div class="hl">'+esc(val('headline'))+'</div>'
+      + (val('support')?'<div class="sub">'+esc(val('support'))+'</div>':'')
+      + '<div class="st-plogo">'+(paper?colorLogo:logo)+'</div>'
+      + '</div></div>';
+  }
+  else if(tpl==='quote'){
+    html = '<div class="t-quote">'
+      + '<div class="qm">“</div>'
+      + '<div class="q">'+esc(val('quote'))+'</div>'
+      + '<div class="who"><span class="bar"></span><div><div class="nm">'+esc(val('name'))+'</div>'
+      + (val('role')?'<div class="rl">'+esc(val('role'))+'</div>':'')+'</div></div>'
+      + '</div><div class="st-logo" style="top:auto;bottom:52px;left:auto;right:var(--pad)">'+(paper?colorLogo:logo)+'</div>'
+      + (S.usnh?'<div class="st-usnh">A University System of New Hampshire story</div>':'');
+  }
+  else if(tpl==='ann'){
+    const chips=['chip1','chip2','chip3'].map(k=>val(k)).filter(Boolean)
+      .map(c=>'<span class="chip">'+esc(c)+'</span>').join('');
+    html = '<div class="t-ann">'
+      + (val('tag')?'<span class="st-tag" style="align-self:flex-start">'+esc(val('tag'))+'</span>':'')
+      + '<div class="hl">'+esc(val('headline'))+'</div>'
+      + (chips?'<div class="chips">'+chips+'</div>':'')
+      + (val('support')?'<div class="det">'+esc(val('support'))+'</div>':'')
+      + (val('cta')?'<div class="cta">'+esc(val('cta'))+'</div>':'')
+      + '</div><div class="st-logo" style="top:auto;bottom:52px;left:auto;right:var(--pad)">'+(paper?colorLogo:logo)+'</div>';
+  }
+  else if(tpl==='poster'){
+    html = '<div class="t-poster">'
+      + '<div class="bar"></div>'
+      + '<div class="hl">'+esc(val('headline'))+'</div>'
+      + (val('support')?'<div class="sub">'+esc(val('support'))+'</div>':'')
+      + '</div><div class="st-logo" style="top:auto;bottom:52px;left:auto;right:var(--pad)">'+(paper?colorLogo:logo)+'</div>'
+      + (S.usnh?'<div class="st-usnh">A University System of New Hampshire story</div>':'');
+  }
+  st.innerHTML = html;
+
+  // quote/ann/poster: logo bottom-right, USNH line bottom-left — stat/photo keep logo top-left
+  sizeStage();
+  buildCaption();
+  saveDraft();
+}
+
+function sizeStage(){
+  const sz = SIZES[S.size];
+  const area = $('stage-area');
+  const availW = Math.min(area.clientWidth - 52, sz.w, S.size==='wide' ? 860 : 560);
+  const availH = Math.max(area.clientHeight - 90, 300);
+  const scale = Math.min(availW/sz.w, availH/sz.h);
+  $('stage').style.transform = 'scale('+scale+')';
+  const wrap = $('stage-wrap');
+  wrap.style.width = (sz.w*scale)+'px'; wrap.style.height = (sz.h*scale)+'px';
+  $('pv-label').textContent = 'Live preview — downloads at full '+sz.w+' × '+sz.h;
+}
+window.addEventListener('resize', ()=>{ if(tpl) sizeStage(); });
+
+/* ================= caption + export ================= */
+function buildCaption(){
+  const p=[]; const fdl=S.fields;
+  const hl = fdl.headline||fdl.quote||((fdl.value||'')&&((fdl.value||'')+' — '+(fdl.label||'')));
+  if(hl) p.push(hl);
+  if(fdl.support) p.push(fdl.support);
+  if(fdl.attr||fdl.name) p.push('— '+(fdl.attr||fdl.name+(fdl.role?', '+fdl.role:'')));
+  p.push('A University System of New Hampshire story.');
+  p.push(SCHOOLS[school].tag+' #USNH #NHWorkforce #NewHampshire');
+  $('caption-out').value = p.join('\n\n');
+}
+$('copy-caption').addEventListener('click', async ()=>{
+  const btn=$('copy-caption'), old=btn.textContent, txt=$('caption-out').value;
+  try{ await navigator.clipboard.writeText(txt); }
+  catch(e){ $('caption-out').select(); document.execCommand('copy'); }
+  btn.textContent='Copied ✓'; setTimeout(()=>btn.textContent=old,1600);
+});
+
+async function exportPNG(){
+  const btns=[$('btn-export'),$('btn-export2')];
+  btns.forEach(b=>{ b.dataset.old=b.textContent; b.textContent='Rendering…'; b.disabled=true; });
+  const st=$('stage'), sz=SIZES[S.size], prev=st.style.transform;
+  st.style.transform='none';
+  try{
+    const canvas = await html2canvas(st,{width:sz.w,height:sz.h,scale:1,backgroundColor:null,useCORS:true});
+    const a=document.createElement('a');
+    a.href=canvas.toDataURL('image/png');
+    a.download='usnh-'+school+'-'+tpl+'-'+S.size+'.png';
+    a.click();
+  } finally {
+    st.style.transform=prev;
+    btns.forEach(b=>{ b.textContent=b.dataset.old; b.disabled=false; });
+  }
+}
+$('btn-export').addEventListener('click', exportPNG);
+$('btn-export2').addEventListener('click', exportPNG);
+
+/* ================= init ================= */
+setSchool(school);
+renderCards();
+renderContinue();
+</script>
+</body>
+</html>
