@@ -194,7 +194,10 @@
   .pc-preview img{max-height:52px;max-width:100%;object-fit:contain}
   /* stage lockup: partner logo on a white chip so any logo works on any background */
   .st-cb{display:flex;align-items:center;gap:24px}
-  .st-cb .cbchip{background:#fff;border-radius:16px;padding:14px 24px;display:flex;align-items:center;box-shadow:0 4px 22px rgba(0,0,0,.18)}
+  /* No box-shadow here: html2canvas rasterises it as a grey gradient smeared
+     over the logo, so exports came out looking "highlighted". A flat chip
+     exports identically to what the preview shows. */
+  .st-cb .cbchip{background:#fff;border-radius:16px;padding:14px 24px;display:flex;align-items:center}
   .st-cb .cbchip img{height:calc(58px*var(--lgs,1));width:auto;max-width:320px;object-fit:contain;display:block}
   .st-cb .cbchip b{font:800 calc(30px*var(--lgs,1)) var(--fh);color:#14181d;white-space:nowrap;letter-spacing:-.01em}
   .st-cb .cbdiv{width:2px;height:calc(60px*var(--lgs,1));background:rgba(255,255,255,.5);border-radius:1px;flex:0 0 auto}
