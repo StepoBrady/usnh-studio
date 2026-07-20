@@ -190,12 +190,34 @@
   /* stage lockup: partner logo on a white chip so any logo works on any background */
   .st-cb{display:flex;align-items:center;gap:24px}
   .st-cb .cbchip{background:#fff;border-radius:16px;padding:14px 24px;display:flex;align-items:center;box-shadow:0 4px 22px rgba(0,0,0,.18)}
-  .st-cb .cbchip img{height:58px;width:auto;max-width:320px;object-fit:contain;display:block}
-  .st-cb .cbchip b{font:800 30px var(--fh);color:#14181d;white-space:nowrap;letter-spacing:-.01em}
-  .st-cb .cbdiv{width:2px;height:60px;background:rgba(255,255,255,.5);border-radius:1px;flex:0 0 auto}
+  .st-cb .cbchip img{height:calc(58px*var(--lgs,1));width:auto;max-width:320px;object-fit:contain;display:block}
+  .st-cb .cbchip b{font:800 calc(30px*var(--lgs,1)) var(--fh);color:#14181d;white-space:nowrap;letter-spacing:-.01em}
+  .st-cb .cbdiv{width:2px;height:calc(60px*var(--lgs,1));background:rgba(255,255,255,.5);border-radius:1px;flex:0 0 auto}
   #stage.bg-paper .st-cb .cbdiv{background:#d8d4c8}
   .st-cb .cblogo{display:flex;align-items:center}
-  .st-cb .cblogo img,.st-cb .cblogo svg{height:68px;width:auto;display:block}
+  .st-cb .cblogo img,.st-cb .cblogo svg{height:calc(68px*var(--lgs,1));width:auto;display:block}
+
+  /* ============ AI cost chip ============ */
+  .cost-chip{padding:8px 14px;border:1px solid var(--line2);border-radius:999px;background:var(--bg2);color:var(--ink2);font:700 12px var(--f);cursor:pointer;white-space:nowrap}
+  .cost-chip:hover{border-color:#3d4552;color:var(--ink)}
+
+  /* ============ partner home card ============ */
+  #partner-home .ph-row{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+  #partner-home .ph-chip{background:#fff;border-radius:12px;padding:10px 16px;display:flex;align-items:center;flex:0 0 auto}
+  #partner-home .ph-chip img{height:44px;max-width:220px;object-fit:contain;display:block}
+  #partner-home .ph-fields{flex:1;min-width:220px;display:flex;flex-direction:column;gap:8px}
+  #partner-home input[type=file]{width:100%;border:1px solid var(--line2);border-radius:9px;background:var(--bg);color:var(--ink2);padding:8px 10px;font:12px var(--f)}
+  #partner-home input[type=text]{width:100%;border:1px solid var(--line2);border-radius:9px;background:var(--bg);color:var(--ink);padding:9px 12px;font:13px var(--f)}
+  #partner-home input[type=text]:focus{outline:none;border-color:var(--brand)}
+  #partner-home .ph-x{align-self:flex-start;padding:8px 14px;border:1px solid var(--line2);border-radius:9px;background:none;color:var(--ink2);font:600 12px var(--f);cursor:pointer}
+  #partner-home .ph-x:hover{border-color:#c0392b;color:#e07a6a}
+
+  /* ============ layout variations (text position) ============ */
+  #stage.tp-top .t-stat,#stage.tp-top .t-quote,#stage.tp-top .t-ann,#stage.tp-top .t-poster,#stage.tp-top .t-split .pane{justify-content:flex-start;padding-top:calc(var(--pad) + 150px)}
+  #stage.tp-middle .t-stat,#stage.tp-middle .t-quote,#stage.tp-middle .t-ann,#stage.tp-middle .t-poster,#stage.tp-middle .t-split .pane{justify-content:center}
+  #stage.tp-bottom .t-stat,#stage.tp-bottom .t-quote,#stage.tp-bottom .t-ann,#stage.tp-bottom .t-poster,#stage.tp-bottom .t-split .pane{justify-content:flex-end;padding-bottom:calc(var(--pad) + 80px)}
+  #stage.tp-top .t-photo .tx{bottom:auto;top:calc(var(--pad) + 170px)}
+  #stage.tp-middle .t-photo .tx{bottom:auto;top:50%;transform:translateY(-50%)}
 
   /* hide foreground for the animation's background-layer capture */
   #stage.cap-bg .st-logo,#stage.cap-bg .st-usnh,
@@ -257,9 +279,9 @@
   #stage.bg-paper{background:#fbfaf7;color:#14181d}
 
   /* shared pieces */
-  .st-logo{position:absolute;top:var(--pad);left:var(--pad);height:86px;display:flex;align-items:center}
-  .st-logo img,.st-logo svg{height:86px;width:auto;display:block}
-  #stage.sz-story .st-logo{height:96px}#stage.sz-story .st-logo img,#stage.sz-story .st-logo svg{height:96px}
+  .st-logo{position:absolute;top:var(--pad);left:var(--pad);height:calc(86px*var(--lgs,1));display:flex;align-items:center}
+  .st-logo img,.st-logo svg{height:calc(86px*var(--lgs,1));width:auto;display:block}
+  #stage.sz-story .st-logo{height:calc(96px*var(--lgs,1))}#stage.sz-story .st-logo img,#stage.sz-story .st-logo svg{height:calc(96px*var(--lgs,1))}
   .st-usnh{position:absolute;left:var(--pad);bottom:52px;font-size:24px;letter-spacing:.02em;opacity:.82;font-weight:500}
   #stage.bg-paper .st-usnh{color:#6b7482;opacity:1}
   .st-tag{display:inline-block;font-weight:700;font-size:26px;letter-spacing:.14em;text-transform:uppercase;padding:12px 22px;border:3px solid rgba(255,255,255,.55);border-radius:100px}
@@ -269,12 +291,12 @@
   .t-stat{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:var(--pad);padding-left:calc(var(--pad) + 46px)}
   .t-stat::before{content:"";position:absolute;left:var(--pad);top:26%;bottom:26%;width:16px;border-radius:8px;background:rgba(255,255,255,.9)}
   #stage.bg-paper .t-stat::before{background:var(--brand)}
-  .t-stat .v{font-family:var(--fh);font-weight:900;letter-spacing:-.04em;font-size:300px;line-height:.95}
-  .t-stat .l{font-family:var(--fh);font-weight:700;font-size:56px;margin-top:18px;letter-spacing:-.01em}
-  .t-stat .s{font-size:33px;line-height:1.45;margin-top:26px;max-width:82%;opacity:.92}
-  .t-stat .src{font-size:24px;margin-top:34px;opacity:.6}
-  #stage.sz-story .t-stat .v{font-size:340px}
-  #stage.sz-wide .t-stat .v{font-size:330px}
+  .t-stat .v{font-family:var(--fh);font-weight:900;letter-spacing:-.04em;font-size:calc(300px*var(--tsc,1));line-height:.95}
+  .t-stat .l{font-family:var(--fh);font-weight:700;font-size:calc(56px*var(--tsc,1));margin-top:18px;letter-spacing:-.01em}
+  .t-stat .s{font-size:calc(33px*var(--tsc,1));line-height:1.45;margin-top:26px;max-width:82%;opacity:.92}
+  .t-stat .src{font-size:calc(24px*var(--tsc,1));margin-top:34px;opacity:.6}
+  #stage.sz-story .t-stat .v{font-size:calc(340px*var(--tsc,1))}
+  #stage.sz-wide .t-stat .v{font-size:calc(330px*var(--tsc,1))}
   #stage.sz-wide .t-stat .s{max-width:62%}
 
   /* ---------- Photo Statement ---------- */
@@ -287,10 +309,10 @@
   #stage[data-overlay="dark"] .t-photo .scrim{background:rgba(8,10,14,.55)}
   #stage[data-overlay="none"] .t-photo .scrim{background:none}
   .t-photo .tx{position:absolute;left:var(--pad);right:var(--pad);bottom:118px;text-shadow:0 2px 24px rgba(0,0,0,.35)}
-  .t-photo .hl{font-family:var(--fh);font-weight:800;font-size:88px;line-height:1.04;letter-spacing:-.02em;margin-top:30px;text-wrap:balance}
-  .t-photo .sub{font-size:34px;line-height:1.45;margin-top:24px;max-width:88%;opacity:.94}
-  .t-photo .attr{font-size:27px;margin-top:22px;opacity:.75;font-weight:600}
-  #stage.sz-wide .t-photo .hl{font-size:96px;max-width:72%}
+  .t-photo .hl{font-family:var(--fh);font-weight:800;font-size:calc(88px*var(--tsc,1));line-height:1.04;letter-spacing:-.02em;margin-top:30px;text-wrap:balance}
+  .t-photo .sub{font-size:calc(34px*var(--tsc,1));line-height:1.45;margin-top:24px;max-width:88%;opacity:.94}
+  .t-photo .attr{font-size:calc(27px*var(--tsc,1));margin-top:22px;opacity:.75;font-weight:600}
+  #stage.sz-wide .t-photo .hl{font-size:calc(96px*var(--tsc,1));max-width:72%}
   #stage.sz-wide .t-photo .sub{max-width:62%}
   #stage.sz-story .t-photo .tx{bottom:150px}
 
@@ -303,32 +325,32 @@
   .t-split .pane::before{content:"";position:absolute;left:0;right:0;top:0;height:16px;background:rgba(255,255,255,.85)}
   #stage.sz-wide .t-split .pane::before{left:0;top:0;bottom:0;right:auto;width:16px;height:auto}
   #stage.bg-paper .t-split .pane::before{background:var(--brand)}
-  .t-split .hl{font-family:var(--fh);font-weight:800;font-size:72px;line-height:1.06;letter-spacing:-.02em;margin-top:28px;text-wrap:balance}
-  .t-split .sub{font-size:31px;line-height:1.5;margin-top:22px;opacity:.92}
-  .t-split .pane .st-plogo{margin-top:44px;height:74px}
-  .t-split .pane .st-plogo img,.t-split .pane .st-plogo svg{height:74px;width:auto;display:block}
+  .t-split .hl{font-family:var(--fh);font-weight:800;font-size:calc(72px*var(--tsc,1));line-height:1.06;letter-spacing:-.02em;margin-top:28px;text-wrap:balance}
+  .t-split .sub{font-size:calc(31px*var(--tsc,1));line-height:1.5;margin-top:22px;opacity:.92}
+  .t-split .pane .st-plogo{margin-top:44px;height:calc(74px*var(--lgs,1))}
+  .t-split .pane .st-plogo img,.t-split .pane .st-plogo svg{height:calc(74px*var(--lgs,1));width:auto;display:block}
   #stage.sz-story .t-split .ph{flex:1.35}
 
   /* ---------- Quote ---------- */
   .t-quote{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:var(--pad)}
   .t-quote .qm{font-family:var(--fh);font-weight:900;font-size:220px;line-height:.6;height:110px;color:rgba(255,255,255,.85)}
   #stage.bg-paper .t-quote .qm{color:var(--brand)}
-  .t-quote .q{font-family:var(--fh);font-weight:700;font-size:66px;line-height:1.18;letter-spacing:-.015em;text-wrap:balance;max-width:94%}
+  .t-quote .q{font-family:var(--fh);font-weight:700;font-size:calc(66px*var(--tsc,1));line-height:1.18;letter-spacing:-.015em;text-wrap:balance;max-width:94%}
   .t-quote .who{margin-top:52px;display:flex;align-items:center;gap:20px}
   .t-quote .who .bar{width:56px;height:8px;border-radius:4px;background:rgba(255,255,255,.85)}
   #stage.bg-paper .t-quote .who .bar{background:var(--brand)}
-  .t-quote .who .nm{font-weight:800;font-size:32px}
-  .t-quote .who .rl{font-size:28px;opacity:.72}
-  #stage.sz-wide .t-quote .q{font-size:74px;max-width:80%}
+  .t-quote .who .nm{font-weight:800;font-size:calc(32px*var(--tsc,1))}
+  .t-quote .who .rl{font-size:calc(28px*var(--tsc,1));opacity:.72}
+  #stage.sz-wide .t-quote .q{font-size:calc(74px*var(--tsc,1));max-width:80%}
 
   /* ---------- Announcement ---------- */
   .t-ann{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:var(--pad)}
-  .t-ann .hl{font-family:var(--fh);font-weight:800;font-size:92px;line-height:1.03;letter-spacing:-.025em;margin-top:36px;text-wrap:balance}
+  .t-ann .hl{font-family:var(--fh);font-weight:800;font-size:calc(92px*var(--tsc,1));line-height:1.03;letter-spacing:-.025em;margin-top:36px;text-wrap:balance}
   .t-ann .chips{display:flex;gap:16px;flex-wrap:wrap;margin-top:44px}
-  .t-ann .chip{font-weight:700;font-size:29px;padding:16px 28px;border-radius:14px;background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.28)}
+  .t-ann .chip{font-weight:700;font-size:calc(29px*var(--tsc,1));padding:16px 28px;border-radius:14px;background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.28)}
   #stage.bg-paper .t-ann .chip{background:#f1efe8;border-color:#e0ddd2;color:#14181d}
-  .t-ann .det{font-size:32px;line-height:1.5;margin-top:38px;max-width:86%;opacity:.92}
-  .t-ann .cta{font-family:var(--fh);font-weight:800;font-size:36px;margin-top:46px}
+  .t-ann .det{font-size:calc(32px*var(--tsc,1));line-height:1.5;margin-top:38px;max-width:86%;opacity:.92}
+  .t-ann .cta{font-family:var(--fh);font-weight:800;font-size:calc(36px*var(--tsc,1));margin-top:46px}
   .t-ann .cta::after{content:" →"}
   #stage.bg-paper .t-ann .cta{color:var(--brand)}
   #stage.sz-wide .t-ann .hl{max-width:80%}
@@ -338,11 +360,11 @@
   .t-poster{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:var(--pad)}
   .t-poster .bar{width:120px;height:16px;border-radius:8px;background:rgba(255,255,255,.9)}
   #stage.bg-paper .t-poster .bar{background:var(--brand)}
-  .t-poster .hl{font-family:var(--fh);font-weight:900;font-size:124px;line-height:1.0;letter-spacing:-.03em;margin-top:52px;text-wrap:balance}
-  .t-poster .sub{font-size:36px;line-height:1.5;margin-top:44px;max-width:84%;opacity:.9}
-  #stage.sz-wide .t-poster .hl{font-size:136px;max-width:88%}
+  .t-poster .hl{font-family:var(--fh);font-weight:900;font-size:calc(124px*var(--tsc,1));line-height:1.0;letter-spacing:-.03em;margin-top:52px;text-wrap:balance}
+  .t-poster .sub{font-size:calc(36px*var(--tsc,1));line-height:1.5;margin-top:44px;max-width:84%;opacity:.9}
+  #stage.sz-wide .t-poster .hl{font-size:calc(136px*var(--tsc,1));max-width:88%}
   #stage.sz-wide .t-poster .sub{max-width:60%}
-  #stage.sz-square .t-poster .hl,#stage.sz-portrait .t-poster .hl{font-size:112px}
+  #stage.sz-square .t-poster .hl,#stage.sz-portrait .t-poster .hl{font-size:calc(112px*var(--tsc,1))}
 </style>
 </head>
 <body>
@@ -352,6 +374,8 @@
   <div class="topbar">
     <div class="mk" onclick="goHome()"><span class="mkdot"><i></i><i></i><i></i></span><b>USNH Studio</b></div>
     <div class="school-seg" id="school-seg-home"></div>
+    <div class="sp"></div>
+    <button class="cost-chip" type="button" title="Total AI spend in this browser — click to reset">AI $0.000</button>
   </div>
   <div class="home">
     <div class="eyebrow" id="home-eyebrow">USNH Campus Content Studio</div>
@@ -370,6 +394,8 @@
       <div class="hint" id="idea-status">Uses your own Anthropic key, stored only in this browser — never uploaded or shared. Plain-spoken, on-brand copy for whichever campus is selected above.</div>
     </div>
 
+    <div class="idea hidden" id="partner-home"></div>
+
     <div class="cards" id="tpl-cards"></div>
     <div class="home-sec">
       <h2>Continue where you left off</h2>
@@ -385,6 +411,7 @@
     <div class="mk" onclick="goHome()"><span class="mkdot"><i></i><i></i><i></i></span><b>USNH Studio</b></div>
     <div class="school-seg" id="school-seg-ws"></div>
     <div class="sp"></div>
+    <button class="cost-chip" type="button" title="Total AI spend in this browser — click to reset">AI $0.000</button>
     <button class="btn-export" id="btn-export">Export PNG</button>
   </div>
 
@@ -508,7 +535,7 @@ let S = null;               // active template state {size,bg,overlay,photo,focu
 
 function defState(t){
   return { size:'square', bg:(TPLS[t].bgs||['brand'])[0], overlay:'gradient', photo:null, focus:50,
-    usnh:true, animSecs:4, fields:{} };
+    usnh:true, animSecs:4, logoPos:'auto', txtPos:'auto', lgs:1, tsc:1, fields:{} };
 }
 function loadDraft(t){ try{ const s = localStorage.getItem(LS.draft+t); return s?JSON.parse(s):null; }catch(e){ return null; } }
 function saveDraft(){ if(!tpl||!S) return; try{ localStorage.setItem(LS.draft+tpl, JSON.stringify({when:Date.now(),school,state:S})); }catch(e){} }
@@ -538,7 +565,7 @@ function setSchool(k){
 function goHome(){
   saveDraft();
   $('workspace').classList.add('hidden'); $('home').classList.remove('hidden');
-  tpl=null; S=null; renderContinue();
+  tpl=null; S=null; renderContinue(); renderPartnerHome();
 }
 function openTpl(t, fromDraft){
   tpl = t;
@@ -644,6 +671,17 @@ function buildPanel(){
     rg.oninput = () => { S.focus=+rg.value; render(); }; ST.appendChild(rg);
     if(tpl==='photo') ST.appendChild(seg('Overlay',[['gradient','Gradient'],['brand','Brand'],['dark','Dark'],['none','None']], S.overlay, v=>{ S.overlay=v; render(); }));
   }
+  // layout variations
+  ST.appendChild(seg('Logo position',[['auto','Auto'],['tl','Top L'],['tr','Top R'],['bl','Btm L'],['br','Btm R']], S.logoPos||'auto', v=>{ S.logoPos=v; render(); }));
+  ST.appendChild(seg('Logo size',[['0.8','S'],['1','M'],['1.25','L']], String(S.lgs||1), v=>{ S.lgs=parseFloat(v); render(); }));
+  ST.appendChild(seg('Text position',[['auto','Auto'],['top','Top'],['middle','Middle'],['bottom','Bottom']], S.txtPos||'auto', v=>{ S.txtPos=v; render(); }));
+  ST.appendChild(seg('Text size',[['0.85','S'],['1','M'],['1.15','L']], String(S.tsc||1), v=>{ S.tsc=parseFloat(v); render(); }));
+  const lrow=document.createElement('div'); lrow.className='row2'; lrow.style.marginTop='13px';
+  lrow.innerHTML='<button class="btn" type="button" id="lk-shuffle">🎲 Shuffle look</button><button class="btn" type="button" id="lk-reset">Reset layout</button>';
+  lrow.querySelector('#lk-shuffle').onclick=shuffleLook;
+  lrow.querySelector('#lk-reset').onclick=()=>{ S.logoPos='auto'; S.txtPos='auto'; S.lgs=1; S.tsc=1; buildPanel(); render(); };
+  ST.appendChild(lrow);
+
   const chk=document.createElement('label'); chk.className='check';
   chk.innerHTML='<input type="checkbox" '+(S.usnh?'checked':'')+'> Show “A University System of New Hampshire story”';
   chk.querySelector('input').onchange = e => { S.usnh=e.target.checked; render(); };
@@ -659,17 +697,7 @@ function buildPanel(){
 
   const pll=document.createElement('label'); pll.innerHTML='Partner logo <span class="opt">(shown on a white chip so any logo works)</span>'; pfields.appendChild(pll);
   const pf=document.createElement('input'); pf.type='file'; pf.accept='image/*';
-  pf.onchange = e => { const file=e.target.files[0]; if(!file) return;
-    const r=new FileReader();
-    r.onload=()=>{
-      if(file.type==='image/svg+xml'){ partner.logo=r.result; savePartner(); buildPanel(); render(); return; }
-      const im=new Image();
-      im.onload=()=>{ const h=Math.min(400,im.height), w=im.width/im.height*h;
-        const c=document.createElement('canvas'); c.width=w; c.height=h;
-        c.getContext('2d').drawImage(im,0,0,w,h);
-        partner.logo=c.toDataURL('image/png'); savePartner(); buildPanel(); render(); };
-      im.src=r.result; };
-    r.readAsDataURL(file); };
+  pf.onchange = e => partnerLogoFile(e.target.files[0], ()=>{ buildPanel(); render(); });
   pfields.appendChild(pf);
   if(partner.logo){
     const pv=document.createElement('div'); pv.className='pc-preview';
@@ -741,7 +769,10 @@ async function render(){
   if(!tpl||!S) return;
   const st = $('stage'), sz = SIZES[S.size];
   st.style.width = sz.w+'px'; st.style.height = sz.h+'px';
-  st.className = 'sz-'+S.size+' bg-'+(TPLS[tpl].bgs?S.bg:'brand');
+  st.className = 'sz-'+S.size+' bg-'+(TPLS[tpl].bgs?S.bg:'brand')
+    + (S.txtPos && S.txtPos!=='auto' ? ' tp-'+S.txtPos : '');
+  st.style.setProperty('--lgs', S.lgs||1);
+  st.style.setProperty('--tsc', S.tsc||1);
   st.dataset.school = school; st.dataset.overlay = S.overlay;
 
   const paper = TPLS[tpl].bgs && S.bg==='paper';
@@ -754,6 +785,17 @@ async function render(){
   const cb = lg => partnerOn()
     ? '<div class="st-cb">'+partnerChip()+'<span class="cbdiv"></span><span class="cblogo">'+lg+'</span></div>'
     : lg;
+  // logo corner: template default unless the user picked one in Layout
+  const LOGO_POS = {
+    tl:'top:var(--pad);left:var(--pad);right:auto;bottom:auto',
+    tr:'top:var(--pad);right:var(--pad);left:auto;bottom:auto',
+    bl:'top:auto;bottom:52px;left:var(--pad);right:auto',
+    br:'top:auto;bottom:52px;left:auto;right:var(--pad)'
+  };
+  const logoDiv = (defPos, inner) => {
+    const pos = (S.logoPos && S.logoPos!=='auto') ? S.logoPos : defPos;
+    return '<div class="st-logo" style="'+LOGO_POS[pos]+'">'+inner+'</div>';
+  };
   const photoBg = S.photo ? 'style="background-image:url('+S.photo+');background-position:50% '+S.focus+'%"' : '';
   const phEmpty = S.photo ? '' : '<div class="ph-empty">Add a photo in Style →</div>';
 
@@ -764,7 +806,7 @@ async function render(){
       + '<div class="l">'+esc(val('label'))+'</div>'
       + (val('support')?'<div class="s">'+esc(val('support'))+'</div>':'')
       + (val('source')?'<div class="src">Source: '+esc(val('source'))+'</div>':'')
-      + '</div><div class="st-logo">'+cb(logo)+'</div>'+usnhLine;
+      + '</div>'+logoDiv('tl',cb(logo))+usnhLine;
   }
   else if(tpl==='photo'){
     html = '<div class="t-photo">'
@@ -792,7 +834,7 @@ async function render(){
       + '<div class="q">'+esc(val('quote'))+'</div>'
       + '<div class="who"><span class="bar"></span><div><div class="nm">'+esc(val('name'))+'</div>'
       + (val('role')?'<div class="rl">'+esc(val('role'))+'</div>':'')+'</div></div>'
-      + '</div><div class="st-logo" style="top:auto;bottom:52px;left:auto;right:var(--pad)">'+cb(paper?colorLogo:logo)+'</div>'
+      + '</div>'+logoDiv('br',cb(paper?colorLogo:logo))
       + (S.usnh?'<div class="st-usnh">A University System of New Hampshire story</div>':'');
   }
   else if(tpl==='ann'){
@@ -804,14 +846,14 @@ async function render(){
       + (chips?'<div class="chips">'+chips+'</div>':'')
       + (val('support')?'<div class="det">'+esc(val('support'))+'</div>':'')
       + (val('cta')?'<div class="cta">'+esc(val('cta'))+'</div>':'')
-      + '</div><div class="st-logo" style="top:auto;bottom:52px;left:auto;right:var(--pad)">'+cb(paper?colorLogo:logo)+'</div>';
+      + '</div>'+logoDiv('br',cb(paper?colorLogo:logo));
   }
   else if(tpl==='poster'){
     html = '<div class="t-poster">'
       + '<div class="bar"></div>'
       + '<div class="hl">'+esc(val('headline'))+'</div>'
       + (val('support')?'<div class="sub">'+esc(val('support'))+'</div>':'')
-      + '</div><div class="st-logo" style="top:auto;bottom:52px;left:auto;right:var(--pad)">'+cb(paper?colorLogo:logo)+'</div>'
+      + '</div>'+logoDiv('br',cb(paper?colorLogo:logo))
       + (S.usnh?'<div class="st-usnh">A University System of New Hampshire story</div>':'');
   }
   st.innerHTML = html;
@@ -880,14 +922,6 @@ function aiKey(){ try{ return (localStorage.getItem(AI_KEY_LS)||'').trim(); }cat
 function saveAiKey(v){ try{ localStorage.setItem(AI_KEY_LS, v.trim()); }catch(e){} syncKeyRows(); }
 function syncKeyRows(){ const has = !!aiKey(); const r=$('ai-key-row'); if(r) r.classList.toggle('hidden', has); }
 
-const GEN_SCHEMA = {type:'object',additionalProperties:false,required:['template','fields'],properties:{
-  template:{type:'string',enum:['stat','photo','split','quote','ann','poster']},
-  fields:{type:'object',additionalProperties:false,properties:{
-    value:{type:'string'},label:{type:'string'},support:{type:'string'},source:{type:'string'},
-    tag:{type:'string'},headline:{type:'string'},attr:{type:'string'},quote:{type:'string'},
-    name:{type:'string'},role:{type:'string'},chip1:{type:'string'},chip2:{type:'string'},
-    chip3:{type:'string'},cta:{type:'string'}}}}};
-
 function genSystem(){
   const sc = SCHOOLS[school];
   return 'You write social-visual copy for the University System of New Hampshire. Active campus: '+sc.name+' ('+sc.abbr+').\n'
@@ -902,7 +936,8 @@ function genSystem(){
     +'- poster: headline (<=60, one bold statement), support (<=140, optional)\n'
     +'Only fill fields that belong to the chosen template. When a tag fits one of these, prefer it verbatim: '+TAG_PRESETS.join(', ')+'.\n'
     +'If you invent a statistic, keep it plausible and name a realistic source (e.g. "First-Destination Survey") so the user can verify before posting.'
-    +(partnerOn() ? '\nThis visual is co-branded with employer partner "'+(partner.name||'the partner company')+'". Tell the employer-partnership side of the story: hiring, internships, co-designed projects, the workforce pipeline between the campus and the company.' : '');
+    +(partnerOn() ? '\nThis visual is co-branded with employer partner "'+(partner.name||'the partner company')+'". Tell the employer-partnership side of the story: hiring, internships, co-designed projects, the workforce pipeline between the campus and the company.' : '')
+    +'\nRespond with ONLY a JSON object, no other text, in exactly this shape: {"template":"stat|photo|split|quote|ann|poster","fields":{...}} where fields contains only string values for the chosen template’s field keys (value,label,support,source,tag,headline,attr,quote,name,role,chip1,chip2,chip3,cta).';
 }
 
 function applyGenerated(obj){
@@ -929,7 +964,6 @@ async function aiGenerate(userPrompt, opts){
     const res = await fetch('https://api.anthropic.com/v1/messages', {method:'POST',
       headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body: JSON.stringify({model:AI_MODEL, max_tokens:1200, system:genSystem(),
-        output_config:{format:{type:'json_schema',schema:GEN_SCHEMA}},
         messages:[{role:'user',content:userPrompt}]})});
     if(!res.ok){
       let m=''+res.status; try{ const e=await res.json(); m=(e.error&&e.error.message)||m; }catch(_){}
@@ -943,6 +977,7 @@ async function aiGenerate(userPrompt, opts){
     if(o.forceTpl) obj.template = o.forceTpl;
     applyGenerated(obj);
     const u=data.usage||{}, cost=(u.input_tokens||0)*5/1e6+(u.output_tokens||0)*25/1e6;
+    if(cost) addSpend(cost);
     const msg='Drafted ✓'+(cost?' · ~$'+cost.toFixed(3):'');
     setS(msg);
     const as=$('ai-status'); if(as && o.status!=='ai-status'){ as.textContent=msg; as.classList.remove('warn'); }
@@ -991,6 +1026,63 @@ function partnerChip(){
     ? '<span class="cbchip"><img src="'+partner.logo+'"></span>'
     : '<span class="cbchip"><b>'+esc(partner.name.trim())+'</b></span>';
 }
+function partnerLogoFile(file, done){
+  if(!file) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    if(file.type==='image/svg+xml'){ partner.logo=r.result; savePartner(); if(done)done(); return; }
+    const im=new Image();
+    im.onload=()=>{ const h=Math.min(400,im.height), w=im.width/im.height*h;
+      const c=document.createElement('canvas'); c.width=w; c.height=h;
+      c.getContext('2d').drawImage(im,0,0,w,h);
+      partner.logo=c.toDataURL('image/png'); savePartner(); if(done)done(); };
+    im.src=r.result; };
+  r.readAsDataURL(file);
+}
+function renderPartnerHome(){
+  const box=$('partner-home'); if(!box) return;
+  if(!partner.on){ box.classList.add('hidden'); return; }
+  box.classList.remove('hidden');
+  box.innerHTML='<div class="idea-h">🤝 Your company on every visual <span class="idea-sub">— upload once, co-branded on every PNG and MP4</span></div>'
+    +'<div class="ph-row">'
+    +(partner.logo ? '<span class="ph-chip"><img src="'+partner.logo+'"></span>' : '')
+    +'<div class="ph-fields">'
+    +'<input type="file" id="ph-logo" accept="image/*">'
+    +'<input type="text" id="ph-name" placeholder="Company name — shown on visuals until a logo is added, and in captions">'
+    +'</div>'
+    +(partner.logo ? '<button class="ph-x" id="ph-clear" type="button">Remove logo</button>' : '')
+    +'</div>'
+    +'<div class="hint">Your logo sits on a white chip next to the campus logo, so it works on every background. Saved only in this browser.</div>';
+  $('ph-name').value = partner.name||'';
+  $('ph-name').addEventListener('input', e=>{ partner.name=e.target.value; savePartner(); });
+  $('ph-logo').addEventListener('change', e=>partnerLogoFile(e.target.files[0], renderPartnerHome));
+  const c=$('ph-clear'); if(c) c.addEventListener('click', ()=>{ partner.logo=null; savePartner(); renderPartnerHome(); });
+}
+
+/* ================= layout shuffle ================= */
+function shuffleLook(){
+  const pick=a=>a[Math.floor(Math.random()*a.length)];
+  S.logoPos=pick(['tl','tr','bl','br']);
+  S.txtPos=pick(['top','middle','bottom']);
+  S.lgs=pick([0.8,1,1.25]);
+  S.tsc=pick([0.85,1,1.15]);
+  if(TPLS[tpl].bgs) S.bg=pick(TPLS[tpl].bgs);
+  if(tpl==='photo') S.overlay=pick(['gradient','brand','dark']);
+  buildPanel(); render();
+}
+
+/* ================= AI spend tracking ================= */
+const SPEND_LS='usnhStudio.aiSpend';
+function aiSpend(){ try{ return parseFloat(localStorage.getItem(SPEND_LS))||0; }catch(e){ return 0; } }
+function addSpend(c){ try{ localStorage.setItem(SPEND_LS, String(aiSpend()+c)); }catch(e){} updateCostChips(); }
+function updateCostChips(){
+  const v=aiSpend();
+  const s = v>=0.1 ? '$'+v.toFixed(2) : '$'+v.toFixed(3);
+  document.querySelectorAll('.cost-chip').forEach(el=>{ el.textContent='AI '+s; });
+}
+document.querySelectorAll('.cost-chip').forEach(el=>el.addEventListener('click', ()=>{
+  if(confirm('Reset the AI spend counter?')){ try{ localStorage.setItem(SPEND_LS,'0'); }catch(e){} updateCostChips(); }
+}));
 
 /* ================= animation → MP4 ================= */
 let animOut={url:null,blob:null,ext:'mp4'};
@@ -1120,6 +1212,8 @@ if(partner.on){
 setSchool(school);
 renderCards();
 renderContinue();
+renderPartnerHome();
+updateCostChips();
 </script>
 </body>
 </html>
