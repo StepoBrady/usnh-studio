@@ -297,8 +297,15 @@
   #stage.bg-paper{background:#fbfaf7;color:#14181d}
   #stage.bg-photo{background:#20242b}
 
+  /* Zoomable photo layer. The inner .phz grows past its container by the zoom
+     factor and stays centred; the container clips it. Only width/height/left/top
+     are involved, which html2canvas rasterises exactly (unlike transform:scale). */
+  .phz{position:absolute;background-size:cover;background-repeat:no-repeat;
+    width:calc(100% * var(--pz,1));height:calc(100% * var(--pz,1));
+    left:calc((100% - 100% * var(--pz,1)) / 2);top:calc((100% - 100% * var(--pz,1)) / 2)}
+
   /* photo background layer (any template) */
-  .st-pbg{position:absolute;inset:0;background-size:cover;background-position:50% 50%}
+  .st-pbg{position:absolute;inset:0;overflow:hidden}
   .st-pbg .ph-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:40px;font-weight:600;background:#20242b}
   .st-pscrim{position:absolute;inset:0}
   #stage[data-overlay="gradient"] .st-pscrim{background:linear-gradient(to top,rgba(8,10,14,.9) 0%,rgba(8,10,14,.5) 48%,rgba(8,10,14,.2) 100%)}
@@ -317,10 +324,13 @@
   .t-grid .gwrap.n3{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
   .t-grid .gwrap.n3 .gc:first-child{grid-row:span 2}
   .t-grid .gwrap.n4{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
-  .t-grid .gc{background-size:cover;background-position:50% 50%;background-color:#20242b;position:relative;min-height:0}
+  .t-grid .gc{background-color:#20242b;position:relative;min-height:0;overflow:hidden}
   .t-grid .gc .ph-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.45);font-size:30px;font-weight:600}
   .t-grid .gbar{flex:0 0 auto;padding:calc(var(--pad)*.62) var(--pad) calc(var(--pad)*.66);background:inherit;position:relative}
   .t-grid .gbar::before{content:"";position:absolute;left:0;right:0;top:0;height:14px;background:rgba(255,255,255,.85)}
+  #stage.bar-top .t-grid{flex-direction:column-reverse}
+  #stage.bar-top .t-grid .gbar::before{top:auto;bottom:0}
+  #stage.bar-top .t-grid .gbar{padding-top:calc(var(--pad)*.9)}
   #stage.bg-paper .t-grid .gbar::before{background:var(--brand)}
   .t-grid .hl{font-family:var(--fh);font-weight:800;font-size:calc(62px*var(--tsc,1));line-height:1.06;letter-spacing:-.02em;margin-top:calc(22px*var(--sp,1));text-wrap:balance}
   .t-grid .sub{font-size:calc(29px*var(--tsc,1));line-height:1.45;margin-top:calc(18px*var(--sp,1));opacity:.92}
@@ -349,7 +359,7 @@
 
   /* ---------- Photo Statement ---------- */
   .t-photo{position:absolute;inset:0}
-  .t-photo .ph{position:absolute;inset:0;background-size:cover;background-position:50% 50%}
+  .t-photo .ph{position:absolute;inset:0;overflow:hidden}
   .t-photo .ph-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:40px;font-weight:600;background:#20242b}
   .t-photo .scrim{position:absolute;inset:0}
   #stage[data-overlay="gradient"] .t-photo .scrim{background:linear-gradient(to top,rgba(8,10,14,.88) 0%,rgba(8,10,14,.42) 45%,rgba(8,10,14,.05) 75%)}
@@ -367,7 +377,7 @@
   /* ---------- Split Panel ---------- */
   .t-split{position:absolute;inset:0;display:flex;flex-direction:column}
   #stage.sz-wide .t-split{flex-direction:row}
-  .t-split .ph{flex:1.15;background-size:cover;background-position:50% 50%;position:relative;min-height:0;min-width:0}
+  .t-split .ph{flex:1.15;position:relative;min-height:0;min-width:0;overflow:hidden}
   .t-split .ph .ph-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:40px;font-weight:600;background:#20242b}
   .t-split .pane{flex:1;position:relative;display:flex;flex-direction:column;justify-content:center;padding:var(--pad);background:inherit}
   .t-split .pane::before{content:"";position:absolute;left:0;right:0;top:0;height:16px;background:rgba(255,255,255,.85)}
@@ -587,7 +597,7 @@ let tpl = null;             // active template id
 let S = null;               // active template state {size,bg,overlay,photo,focus,usnh,fields:{}}
 
 function defState(t){
-  return { size:'square', bg:(TPLS[t].bgs||['brand'])[0], overlay:'gradient', photo:null, focus:50,
+  return { size:'square', bg:(TPLS[t].bgs||['brand'])[0], overlay:'gradient', photo:null, focus:50, focusX:50, zoom:1, barPos:'bottom',
     usnh:true, animSecs:4, logoPos:'auto', txtPos:'auto', lgs:1, tsc:1, sp:'auto', padx:1,
     portrait:null, photos:[], fields:{} };
 }
@@ -749,9 +759,7 @@ function buildPanel(){
     const f=document.createElement('input'); f.type='file'; f.accept='image/*';
     f.onchange = e => readImage(e.target.files[0], img=>{ S.photo=img; render(); });
     ST.appendChild(f);
-    const l2=document.createElement('label'); l2.textContent='Photo focus (up / down)'; ST.appendChild(l2);
-    const rg=document.createElement('input'); rg.type='range'; rg.min=0; rg.max=100; rg.value=S.focus;
-    rg.oninput = () => { S.focus=+rg.value; render(); }; ST.appendChild(rg);
+    ST.appendChild(photoAdjustControls());
     if(tpl==='photo' || S.bg==='photo')
       ST.appendChild(seg('Overlay',[['gradient','Gradient'],['brand','Brand'],['dark','Dark'],['none','None']], S.overlay, v=>{ S.overlay=v; render(); }));
   }
@@ -777,6 +785,7 @@ function buildPanel(){
         S.photos = slots.filter(Boolean).slice(0,4); buildPanel(); render(); } }));
     };
     ST.appendChild(f);
+    if(S.photos.length) ST.appendChild(photoAdjustControls());
     if(S.photos.length){
       const pv=document.createElement('div'); pv.className='pc-preview';
       pv.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">'
@@ -789,7 +798,10 @@ function buildPanel(){
   // layout variations
   ST.appendChild(seg('Logo position',[['auto','Auto'],['tl','Top L'],['tr','Top R'],['bl','Btm L'],['br','Btm R']], S.logoPos||'auto', v=>{ S.logoPos=v; render(); }));
   ST.appendChild(seg('Logo size',[['0.8','S'],['1','M'],['1.25','L']], String(S.lgs||1), v=>{ S.lgs=parseFloat(v); render(); }));
-  ST.appendChild(seg('Text position',[['auto','Auto'],['top','Top'],['middle','Middle'],['bottom','Bottom'],['spread','Spread']], S.txtPos||'auto', v=>{ S.txtPos=v; render(); }));
+  if(tpl==='grid')
+    ST.appendChild(seg('Message bar',[['bottom','Bottom'],['top','Top']], S.barPos||'bottom', v=>{ S.barPos=v; render(); }));
+  else
+    ST.appendChild(seg('Text position',[['auto','Auto'],['top','Top'],['middle','Middle'],['bottom','Bottom'],['spread','Spread']], S.txtPos||'auto', v=>{ S.txtPos=v; render(); }));
   ST.appendChild(seg('Text size',[['0.85','S'],['1','M'],['1.15','L']], String(S.tsc||1), v=>{ S.tsc=parseFloat(v); render(); }));
   ST.appendChild(seg('Spacing',[['auto','Auto'],['0.7','Tight'],['1','Balanced'],['1.5','Airy'],['2','Wide']], String(S.sp==null?'auto':S.sp), v=>{ S.sp = v==='auto' ? 'auto' : parseFloat(v); render(); }));
   ST.appendChild(seg('Margins',[['0.8','Narrow'],['1','Normal'],['1.25','Generous']], String(S.padx||1), v=>{ S.padx=parseFloat(v); render(); }));
@@ -831,6 +843,38 @@ function buildPanel(){
   // animation length slider sync
   const al=$('anim-len'), ad=$('anim-dur');
   if(al){ al.value=+S.animSecs||4; if(ad) ad.textContent=(+al.value).toFixed(1)+'s'; }
+}
+
+/* Zoom + pan for the photo. Live-updates the layer directly while dragging so
+   the slider stays smooth, then does a full render on release. */
+function photoAdjustControls(){
+  const wrap=document.createElement('div');
+  const slider=(labelText, get, set, min, max, step, fmt)=>{
+    const row=document.createElement('label');
+    row.style.cssText='display:flex;justify-content:space-between;align-items:center';
+    row.innerHTML='<span>'+labelText+'</span><b style="font-weight:800;color:#111">'+fmt(get())+'</b>';
+    const rg=document.createElement('input');
+    rg.type='range'; rg.min=min; rg.max=max; rg.step=step; rg.value=get();
+    rg.oninput=()=>{ set(+rg.value); row.querySelector('b').textContent=fmt(+rg.value); livePhoto(); };
+    rg.onchange=()=>render();
+    wrap.appendChild(row); wrap.appendChild(rg);
+    return rg;
+  };
+  slider('Zoom', ()=>S.zoom||1, v=>S.zoom=v, 1, 3, 0.05, v=>Math.round(v*100)+'%');
+  slider('Pan ← →', ()=>S.focusX==null?50:S.focusX, v=>S.focusX=v, 0, 100, 1, v=>Math.round(v)+'%');
+  slider('Pan ↑ ↓', ()=>S.focus==null?50:S.focus, v=>S.focus=v, 0, 100, 1, v=>Math.round(v)+'%');
+  const rst=document.createElement('button');
+  rst.type='button'; rst.className='btn'; rst.textContent='Reset photo framing'; rst.style.marginTop='10px';
+  rst.onclick=()=>{ S.zoom=1; S.focusX=50; S.focus=50; buildPanel(); render(); };
+  wrap.appendChild(rst);
+  return wrap;
+}
+/* Update the photo layers in place — avoids a full re-render on every drag tick */
+function livePhoto(){
+  const st=$('stage'); if(!st) return;
+  st.style.setProperty('--pz', S.zoom||1);
+  const pos=(S.focusX==null?50:S.focusX)+'% '+(S.focus==null?50:S.focus)+'%';
+  st.querySelectorAll('.phz').forEach(el=>{ el.style.backgroundPosition=pos; });
 }
 
 function seg(labText, opts, cur, cb){
@@ -905,6 +949,8 @@ async function render(){
   st.style.setProperty('--tsc', S.tsc||1);
   st.style.setProperty('--sp', spacingScale());
   st.style.setProperty('--padx', S.padx||1);
+  st.style.setProperty('--pz', S.zoom||1);
+  if(tpl==='grid' && S.barPos==='top') st.classList.add('bar-top');
   st.dataset.school = school; st.dataset.overlay = S.overlay;
 
   const paper = TPLS[tpl].bgs && S.bg==='paper';
@@ -928,12 +974,15 @@ async function render(){
     const pos = (S.logoPos && S.logoPos!=='auto') ? S.logoPos : defPos;
     return '<div class="st-logo" style="'+LOGO_POS[pos]+'">'+inner+'</div>';
   };
-  const photoBg = S.photo ? 'style="background-image:url('+S.photo+');background-position:50% '+S.focus+'%"' : '';
+  // zoomable/pannable photo layer — src, plus horizontal + vertical focus
+  const focusPos = (S.focusX==null?50:S.focusX)+'% '+(S.focus==null?50:S.focus)+'%';
+  const phz = src => '<div class="phz" style="background-image:url('+src+');background-position:'+focusPos+'"></div>';
+  const photoLayer = S.photo ? phz(S.photo) : '';
   const phEmpty = S.photo ? '' : '<div class="ph-empty">Add a photo in Style →</div>';
   // photo-as-background layer, available on stat / quote / ann / poster
   const isPhotoBg = TPLS[tpl].bgs && S.bg==='photo';
   const pbg = isPhotoBg
-    ? '<div class="st-pbg" '+photoBg+'>'+phEmpty+'</div><div class="st-pscrim"></div>'
+    ? '<div class="st-pbg">'+photoLayer+phEmpty+'</div><div class="st-pscrim"></div>'
     : '';
 
   let html='';
@@ -947,7 +996,7 @@ async function render(){
   }
   else if(tpl==='photo'){
     html = '<div class="t-photo">'
-      + '<div class="ph" '+photoBg+'>'+phEmpty+'</div><div class="scrim"></div>'
+      + '<div class="ph">'+photoLayer+phEmpty+'</div><div class="scrim"></div>'
       + '<div class="tx">'
       + (val('tag')?'<span class="st-tag">'+esc(val('tag'))+'</span>':'')
       + '<div class="hl">'+esc(val('headline'))+'</div>'
@@ -957,7 +1006,7 @@ async function render(){
   }
   else if(tpl==='split'){
     html = '<div class="t-split">'
-      + '<div class="ph" '+photoBg+'>'+phEmpty+'</div>'
+      + '<div class="ph">'+photoLayer+phEmpty+'</div>'
       + '<div class="pane">'
       + (val('tag')?'<span class="st-tag" style="align-self:flex-start">'+esc(val('tag'))+'</span>':'')
       + '<div class="hl">'+esc(val('headline'))+'</div>'
@@ -1003,7 +1052,7 @@ async function render(){
     let cells='';
     for(let i=0;i<n;i++){
       cells += ph[i]
-        ? '<div class="gc" style="background-image:url('+ph[i]+')"></div>'
+        ? '<div class="gc">'+phz(ph[i])+'</div>'
         : '<div class="gc"><div class="ph-empty">Photo '+(i+1)+'</div></div>';
     }
     html = '<div class="t-grid">'
