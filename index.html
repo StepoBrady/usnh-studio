@@ -142,6 +142,41 @@
   .btn.pri:hover{filter:brightness(1.1)}
   .foot-note{margin-top:12px;text-align:center;font-size:11.5px;color:#9aa1ab}
 
+  /* ============ AI: home idea box ============ */
+  .idea{margin:26px 0 34px;border:1px solid var(--line2);border-radius:16px;background:linear-gradient(180deg,#151920,#10131a);padding:18px 20px;position:relative;overflow:hidden}
+  .idea::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--brand)}
+  .idea-h{font-family:var(--fh);font-weight:700;font-size:15px;display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+  .idea-sub{font-weight:400;font-size:12.5px;color:var(--ink2)}
+  .idea textarea{width:100%;border:1px solid var(--line2);border-radius:10px;background:var(--bg);color:var(--ink);padding:11px 13px;font:14px var(--f);resize:vertical;min-height:60px}
+  .idea textarea:focus{outline:none;border-color:var(--brand)}
+  .idea textarea::placeholder{color:var(--ink3)}
+  .idea .irow{display:flex;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap}
+  .idea select{padding:9px 12px;border:1px solid var(--line2);border-radius:10px;background:var(--bg);color:var(--ink);font:600 13px var(--f)}
+  .idea select:focus{outline:none;border-color:var(--brand)}
+  .idea .go{margin-left:auto;padding:10px 22px;border:none;border-radius:10px;background:var(--brand);color:#fff;font-weight:800;font-size:13.5px;cursor:pointer}
+  .idea .go:hover{filter:brightness(1.12)}
+  .idea .go:disabled{opacity:.6;cursor:default}
+  .idea .keyrow{margin-top:10px}
+  .idea .keyrow input{width:100%;border:1px solid var(--line2);border-radius:9px;background:var(--bg);color:var(--ink);padding:8px 12px;font:12px var(--f)}
+  .idea .keyrow input:focus{outline:none;border-color:var(--brand)}
+  .idea .hint{font-size:11.5px;color:var(--ink3);margin-top:9px;line-height:1.5}
+  .idea .hint.warn{color:#e0a05a}
+
+  /* ============ AI: workspace box ============ */
+  .ai-box{border:1px dashed #d3d5da;border-radius:12px;padding:12px 14px;margin-bottom:14px;background:var(--panel-bg)}
+  .ai-box label{margin-top:0}
+  .ai-box textarea{margin-top:2px}
+  .ai-status{font-size:11.5px;color:#9aa1ab;margin-top:8px;min-height:14px;line-height:1.45}
+  .ai-status.warn{color:#b3541e}
+  .ai-key-row{margin-top:8px}
+  .ai-key-row input{font-size:12px}
+
+  /* ============ selectable tag chips ============ */
+  .tagchips{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 8px}
+  .tagchips button{padding:6px 12px;border:1px solid #d8dade;border-radius:999px;background:var(--panel-bg);font:600 11.5px var(--f);cursor:pointer;color:#374151}
+  .tagchips button:hover{border-color:var(--brand)}
+  .tagchips button.on{background:var(--brand);border-color:var(--brand);color:#fff}
+
   /* stage area */
   .stage-area{flex:1;overflow-y:auto;padding:26px;display:flex;flex-direction:column;align-items:center;gap:14px;background:radial-gradient(120% 80% at 50% -10%,#171b22,#0e1014)}
   .stage-wrap{border-radius:10px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.55);background:#000;position:relative;flex:0 0 auto}
@@ -297,6 +332,18 @@
     <h1>What are you making?</h1>
     <p class="lede">On-brand visuals for Keene State, Plymouth State, and UNH — pick a template, and the whole
       workspace rebrands to the campus you choose. Everything stays on your computer.</p>
+
+    <div class="idea">
+      <div class="idea-h">✨ Start from an idea <span class="idea-sub">— describe it, AI drafts the visual</span></div>
+      <textarea id="idea-text" placeholder="e.g. 93% of Keene State grads are working or in grad school within six months — and most of them stay in New Hampshire."></textarea>
+      <div class="irow">
+        <select id="idea-tpl"><option value="">Auto — pick the best template</option></select>
+        <button class="go" id="idea-go">Draft it →</button>
+      </div>
+      <div class="keyrow"><input id="idea-key" type="password" autocomplete="off" placeholder="Anthropic API key (sk-ant-…) — saved only on this device"></div>
+      <div class="hint" id="idea-status">Uses your own Anthropic key, stored only in this browser — never uploaded or shared. Plain-spoken, on-brand copy for whichever campus is selected above.</div>
+    </div>
+
     <div class="cards" id="tpl-cards"></div>
     <div class="home-sec">
       <h2>Continue where you left off</h2>
@@ -321,6 +368,16 @@
         <div class="acc-head"><span class="n">1</span><span class="t">Create</span><span class="sub" id="sub-create"></span>
           <svg class="car" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9aa1ab" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg></div>
         <div class="acc-body">
+          <div class="ai-box">
+            <label>✨ Write it with AI <span class="opt">— or fill the fields below yourself</span></label>
+            <textarea id="ai-idea" rows="2" placeholder="Describe what this post should say…"></textarea>
+            <div class="row2" style="margin-top:8px">
+              <button class="btn" id="ai-gen" type="button">✨ Draft from idea</button>
+              <button class="btn" id="ai-surprise" type="button">💡 Surprise me</button>
+            </div>
+            <div class="ai-key-row hidden" id="ai-key-row"><input id="ai-key" type="password" autocomplete="off" placeholder="Anthropic API key (sk-ant-…) — saved only on this device"></div>
+            <div class="ai-status" id="ai-status"></div>
+          </div>
           <div id="tpl-mount"></div>
           <div id="fields"></div>
         </div>
@@ -522,7 +579,22 @@ function buildPanel(){
     if(multi) inp.rows = key==='quote'?3:2;
     inp.placeholder = ph;
     inp.value = S.fields[key]||'';
-    inp.oninput = () => { S.fields[key]=inp.value; render(); };
+    let chipRow = null;
+    if(key==='tag'){
+      chipRow = document.createElement('div'); chipRow.className='tagchips';
+      for(const t of TAG_PRESETS){
+        const b=document.createElement('button'); b.type='button'; b.textContent=t;
+        b.classList.toggle('on', (S.fields.tag||'')===t);
+        b.onclick=()=>{ S.fields.tag = (S.fields.tag===t ? '' : t); inp.value=S.fields.tag;
+          chipRow.querySelectorAll('button').forEach(x=>x.classList.toggle('on', x.textContent===S.fields.tag && !!S.fields.tag));
+          render(); };
+        chipRow.appendChild(b);
+      }
+      F.appendChild(chipRow);
+    }
+    inp.oninput = () => { S.fields[key]=inp.value;
+      if(chipRow) chipRow.querySelectorAll('button').forEach(x=>x.classList.toggle('on', x.textContent===inp.value));
+      render(); };
     F.appendChild(inp);
   }
 
@@ -726,6 +798,113 @@ async function exportPNG(){
 }
 $('btn-export').addEventListener('click', exportPNG);
 $('btn-export2').addEventListener('click', exportPNG);
+
+/* ================= AI (bring-your-own Anthropic key, stored locally) ================= */
+const TAG_PRESETS = ['Career Outcomes','Student Story','Employer Spotlight','Alumni','Hands-On Learning','Research','Save the Date','Community Impact'];
+const AI_KEY_LS = 'usnhStudio.apiKey', AI_MODEL = 'claude-opus-4-8';
+function aiKey(){ try{ return (localStorage.getItem(AI_KEY_LS)||'').trim(); }catch(e){ return ''; } }
+function saveAiKey(v){ try{ localStorage.setItem(AI_KEY_LS, v.trim()); }catch(e){} syncKeyRows(); }
+function syncKeyRows(){ const has = !!aiKey(); const r=$('ai-key-row'); if(r) r.classList.toggle('hidden', has); }
+
+const GEN_SCHEMA = {type:'object',additionalProperties:false,required:['template','fields'],properties:{
+  template:{type:'string',enum:['stat','photo','split','quote','ann','poster']},
+  fields:{type:'object',additionalProperties:false,properties:{
+    value:{type:'string'},label:{type:'string'},support:{type:'string'},source:{type:'string'},
+    tag:{type:'string'},headline:{type:'string'},attr:{type:'string'},quote:{type:'string'},
+    name:{type:'string'},role:{type:'string'},chip1:{type:'string'},chip2:{type:'string'},
+    chip3:{type:'string'},cta:{type:'string'}}}}};
+
+function genSystem(){
+  const sc = SCHOOLS[school];
+  return 'You write social-visual copy for the University System of New Hampshire. Active campus: '+sc.name+' ('+sc.abbr+').\n'
+    +'Mission: authentic workforce storytelling that builds employer credibility — graduates who stay in New Hampshire, hands-on programs, employer partnerships, career outcomes, campus-to-career moments.\n'
+    +'Voice: plain-spoken, warm, specific, proud without bragging. Concrete details beat slogans. Never cheesy, never corporate filler. Every line must be short enough to sit on a graphic.\n'
+    +'Templates and their fields:\n'
+    +'- stat: value (one big number, <=8 chars, e.g. "93%"), label (<=60), support (<=150, optional), source (optional)\n'
+    +'- photo: tag (<=22, optional), headline (<=60), support (<=140, optional), attr (person credit like "Sarah M. ’25 · Nursing", optional)\n'
+    +'- split: tag (<=22, optional), headline (<=55), support (<=130, optional)\n'
+    +'- quote: quote (<=140, no surrounding quote marks), name, role (optional)\n'
+    +'- ann: tag (eyebrow, <=20), headline (<=55), chip1/chip2/chip3 (short details: a date, a time, a place), support (<=150, optional), cta (optional)\n'
+    +'- poster: headline (<=60, one bold statement), support (<=140, optional)\n'
+    +'Only fill fields that belong to the chosen template. When a tag fits one of these, prefer it verbatim: '+TAG_PRESETS.join(', ')+'.\n'
+    +'If you invent a statistic, keep it plausible and name a realistic source (e.g. "First-Destination Survey") so the user can verify before posting.';
+}
+
+function applyGenerated(obj){
+  const t = TPLS[obj.template] ? obj.template : (tpl || 'poster');
+  const st = defState(t);
+  for(const [k] of TPLS[t].fields){
+    if(obj.fields && typeof obj.fields[k]==='string' && obj.fields[k].trim()) st.fields[k] = obj.fields[k].trim();
+  }
+  try{ localStorage.setItem(LS.draft+t, JSON.stringify({when:Date.now(),school,state:st})); }catch(e){}
+  if(tpl===t){ S=st; buildPanel(); render(); }
+  else { saveDraft(); tpl=null; S=null; openTpl(t, true); }
+}
+
+async function aiGenerate(userPrompt, opts){
+  const o = opts||{}, key = aiKey();
+  const st = o.status ? $(o.status) : null, b = o.btn ? $(o.btn) : null;
+  const setS = (m,warn)=>{ if(st){ st.textContent=m; st.classList.toggle('warn',!!warn); } };
+  if(!key){ setS('⚠ Paste your Anthropic API key first — it’s saved only on this device.', true);
+    syncKeyRows(); const k = $('idea-key') && !$('idea-key').closest('.hidden') && !$('home').classList.contains('hidden') ? $('idea-key') : $('ai-key');
+    if(k){ k.focus(); } return; }
+  let old; if(b){ old=b.textContent; b.textContent='Drafting…'; b.disabled=true; }
+  setS('Drafting…');
+  try{
+    const res = await fetch('https://api.anthropic.com/v1/messages', {method:'POST',
+      headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body: JSON.stringify({model:AI_MODEL, max_tokens:1200, system:genSystem(),
+        output_config:{format:{type:'json_schema',schema:GEN_SCHEMA}},
+        messages:[{role:'user',content:userPrompt}]})});
+    if(!res.ok){
+      let m=''+res.status; try{ const e=await res.json(); m=(e.error&&e.error.message)||m; }catch(_){}
+      setS(res.status===401 ? 'Your API key was rejected (401) — paste a valid key from console.anthropic.com.' : 'Error: '+m, true);
+      return;
+    }
+    const data = await res.json();
+    const txt = (data.content||[]).filter(x=>x.type==='text').map(x=>x.text).join('');
+    let obj=null; try{ obj=JSON.parse(txt); }catch(e){ const m2=txt.match(/\{[\s\S]*\}/); if(m2){ try{ obj=JSON.parse(m2[0]); }catch(_){} } }
+    if(!obj || !obj.fields){ setS('Could not read the draft — try again.', true); return; }
+    if(o.forceTpl) obj.template = o.forceTpl;
+    applyGenerated(obj);
+    const u=data.usage||{}, cost=(u.input_tokens||0)*5/1e6+(u.output_tokens||0)*25/1e6;
+    const msg='Drafted ✓'+(cost?' · ~$'+cost.toFixed(3):'');
+    setS(msg);
+    const as=$('ai-status'); if(as && o.status!=='ai-status'){ as.textContent=msg; as.classList.remove('warn'); }
+  }catch(e){ setS('Network error — check your connection and try again.', true); }
+  finally{ if(b){ b.textContent=old; b.disabled=false; } }
+}
+
+/* ---- wiring ---- */
+(function(){
+  const sel=$('idea-tpl');
+  for(const t in TPLS){ const op=document.createElement('option'); op.value=t; op.textContent=TPLS[t].name; sel.appendChild(op); }
+})();
+$('idea-go').addEventListener('click', ()=>{
+  const txt=$('idea-text').value.trim(), sel=$('idea-tpl').value;
+  if(!txt){ const st=$('idea-status'); st.textContent='Type an idea first — one sentence is plenty.'; st.classList.add('warn'); $('idea-text').focus(); return; }
+  const p='Turn this idea into one on-brand visual for '+SCHOOLS[school].name+'.'
+    +(sel ? ' Use the "'+sel+'" template.' : ' Pick the best-fitting template.')
+    +'\nIdea: '+txt;
+  aiGenerate(p, {btn:'idea-go', status:'idea-status', forceTpl: sel||null});
+});
+$('ai-gen').addEventListener('click', ()=>{
+  const txt=$('ai-idea').value.trim();
+  if(!txt){ const st=$('ai-status'); st.textContent='Describe what this post should say first.'; st.classList.add('warn'); $('ai-idea').focus(); return; }
+  aiGenerate('Turn this idea into copy for the "'+tpl+'" template for '+SCHOOLS[school].name+'.\nIdea: '+txt,
+    {btn:'ai-gen', status:'ai-status', forceTpl: tpl});
+});
+$('ai-surprise').addEventListener('click', ()=>{
+  aiGenerate('Invent ONE fresh, specific post for '+SCHOOLS[school].name+' using the "'+tpl+'" template. '
+    +'Ground it in a real-feeling campus or workforce moment, not a generic slogan. Reach for a less obvious angle. Variety seed '+Math.floor(Math.random()*1e6),
+    {btn:'ai-surprise', status:'ai-status', forceTpl: tpl});
+});
+for(const id of ['idea-key','ai-key']){
+  const el=$(id); if(!el) continue;
+  el.value=aiKey();
+  el.addEventListener('input', e=>saveAiKey(e.target.value));
+}
+syncKeyRows();
 
 /* ================= init ================= */
 setSchool(school);
