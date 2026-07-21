@@ -1411,8 +1411,35 @@ async function render(){
 
   // quote/ann/poster: logo bottom-right, USNH line bottom-left — stat/photo keep logo top-left
   sizeStage();
+  autoFit();
   buildCaption();
   saveDraft();
+}
+
+/* Auto-fit: if the content would spill past the frame (long text, big text size),
+   shrink the type just enough to fit — so exports never clip. Scales down only;
+   stacks on top of the user's Text-size choice. Runs on the preview stage, but
+   --tsc is a pure multiplier so the fitted value is correct at export size too. */
+function autoFit(){
+  const st=$('stage'); if(!st) return;
+  const root=st.querySelector('[class^="t-"]'); if(!root) return;
+  const els=[...root.querySelectorAll('*')].filter(e=>{
+    const r=e.getBoundingClientRect(); return r.height>2 && (e.textContent.trim()||e.querySelector('img,svg'));
+  });
+  if(!els.length) return;
+  const scale=st.getBoundingClientRect().width/SIZES[S.size].w || 1;
+  const inset=8*scale;                 // keep content a hair off the very edge
+  let fit=1;
+  for(let pass=0; pass<7; pass++){
+    st.style.setProperty('--tsc', (S.tsc||1)*fit);
+    const sb=st.getBoundingClientRect();
+    let top=Infinity, bot=-Infinity;
+    for(const e of els){ const r=e.getBoundingClientRect(); if(r.top<top)top=r.top; if(r.bottom>bot)bot=r.bottom; }
+    const ov=Math.max(0,(sb.top+inset)-top)+Math.max(0,bot-(sb.bottom-inset));
+    if(ov<=1) break;
+    const unionH=bot-top; if(unionH<=0) break;
+    fit *= Math.max(.45, (unionH-ov)/unionH*.98);
+  }
 }
 
 function sizeStage(){
