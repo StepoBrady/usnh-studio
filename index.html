@@ -90,6 +90,35 @@
   .th-grid .g3{left:50.5%;top:31.5%;width:49.5%;height:30.5%;background:linear-gradient(135deg,#414b59,#22262d)}
   .th-grid .bar2{left:0;top:62%;width:100%;height:4px;background:rgba(255,255,255,.85)}
   .th-grid .l1{left:8%;top:74%;width:52%;height:8px;border-radius:4px;background:rgba(255,255,255,.9)}
+  .th-rail b{left:8%;top:12%;font-family:var(--fh);font-weight:900;font-size:26px;color:#fff;line-height:1}
+  .th-rail .ln1{left:8%;top:44%;width:70%;height:3px;background:rgba(255,255,255,.75)}
+  .th-rail .ln2{left:8%;top:60%;width:56%;height:3px;background:rgba(255,255,255,.55)}
+  .th-rail .ln3{left:8%;top:76%;width:64%;height:3px;background:rgba(255,255,255,.4)}
+  .th-hook b{left:7%;top:2%;font-family:var(--fh);font-weight:900;font-size:60px;color:rgba(255,255,255,.9);line-height:1}
+  .th-hook .l1{left:8%;top:50%;width:74%;height:13px;border-radius:6px;background:#fff}
+  .th-hook .l2{left:8%;top:70%;width:50%;height:13px;border-radius:6px;background:#fff}
+  .th-myth .p1{left:8%;top:16%;width:84%;height:30%;border-radius:8px;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.3)}
+  .th-myth .p2{left:8%;top:54%;width:84%;height:30%;border-radius:8px;background:#fff}
+  .th-check .c1{left:9%;top:24%;width:14px;height:14px;border-radius:50%;background:#fff}
+  .th-check .c2{left:9%;top:46%;width:14px;height:14px;border-radius:50%;background:#fff}
+  .th-check .c3{left:9%;top:68%;width:14px;height:14px;border-radius:50%;background:#fff}
+  .th-check .l1{left:20%;top:27%;width:60%;height:7px;border-radius:4px;background:rgba(255,255,255,.85)}
+  .th-check .l2{left:20%;top:49%;width:52%;height:7px;border-radius:4px;background:rgba(255,255,255,.85)}
+  .th-check .l3{left:20%;top:71%;width:58%;height:7px;border-radius:4px;background:rgba(255,255,255,.85)}
+  .th-ba .p1{left:7%;top:20%;width:38%;height:56%;border-radius:8px;background:rgba(255,255,255,.16);border:2px solid rgba(255,255,255,.28)}
+  .th-ba .p2{left:55%;top:20%;width:38%;height:56%;border-radius:8px;background:#fff}
+  .th-feat .n1{left:8%;top:30%;width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.4)}
+  .th-feat .n2{left:8%;top:60%;width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.4)}
+  .th-feat .l1{left:24%;top:35%;width:56%;height:8px;border-radius:4px;background:rgba(255,255,255,.85)}
+  .th-feat .l2{left:24%;top:65%;width:48%;height:8px;border-radius:4px;background:rgba(255,255,255,.85)}
+  .th-pcard .ph{left:8%;top:10%;width:84%;height:52%;border-radius:8px 8px 0 0;background:linear-gradient(135deg,#4a5462,#262b33)}
+  .th-pcard .band{left:8%;top:62%;width:84%;height:28%;border-radius:0 0 8px 8px;background:#fff}
+  .th-framed .fr{left:12%;top:8%;width:76%;height:58%;background:#fff;border-radius:3px}
+  .th-framed .ph{left:16%;top:13%;width:68%;height:48%;background:linear-gradient(135deg,#4a5462,#262b33)}
+  .th-framed .cap{left:26%;top:76%;width:48%;height:7px;border-radius:4px;background:rgba(255,255,255,.9)}
+  .th-says .b1{left:8%;top:18%;width:52%;height:18%;border-radius:10px 10px 10px 3px;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.3)}
+  .th-says .b2{right:8%;left:auto;top:42%;width:44%;height:18%;border-radius:10px 10px 3px 10px;background:#fff}
+  .th-says .b3{left:8%;top:66%;width:38%;height:18%;border-radius:10px 10px 10px 3px;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.3)}
   .home-sec{margin-top:38px}
   .home-sec h2{font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--ink2);margin:0 0 13px;text-transform:uppercase}
   .continue{display:flex;gap:10px;flex-wrap:wrap}
@@ -317,6 +346,100 @@
   .t-quote .qport{width:calc(150px*var(--lgs,1));height:calc(150px*var(--lgs,1));border-radius:50%;background-size:cover;background-position:50% 50%;flex:0 0 auto;border:5px solid rgba(255,255,255,.5)}
   #stage.bg-paper .t-quote .qport{border-color:var(--brand)}
 
+  /* ---------- Stat Rail (three quick numbers) ---------- */
+  .t-rail{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:var(--pad)}
+  .t-rail .hl{font-family:var(--fh);font-weight:800;font-size:calc(58px*var(--tsc,1));line-height:1.08;letter-spacing:-.02em;margin-bottom:calc(54px*var(--sp,1));text-wrap:balance}
+  .t-rail .rows{display:flex;flex-direction:column;gap:calc(34px*var(--sp,1))}
+  #stage.sz-wide .t-rail .rows{flex-direction:row;gap:calc(48px*var(--sp,1))}
+  #stage.sz-wide .t-rail .rows>*{flex:1}
+  .t-rail .r{display:flex;align-items:baseline;gap:26px;border-top:5px solid rgba(255,255,255,.4);padding-top:calc(22px*var(--sp,1))}
+  #stage.bg-paper .t-rail .r{border-top-color:rgba(0,0,0,.16)}
+  #stage.sz-wide .t-rail .r{flex-direction:column;gap:10px}
+  .t-rail .rv{font-family:var(--fh);font-weight:900;font-size:calc(112px*var(--tsc,1));letter-spacing:-.03em;line-height:.9;flex:0 0 auto}
+  .t-rail .rl{font-size:calc(30px*var(--tsc,1));line-height:1.35;opacity:.9}
+
+  /* ---------- Hook (scroll-stopper) ---------- */
+  .t-hook{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:var(--pad)}
+  .t-hook .kick{font-weight:700;font-size:calc(30px*var(--tsc,1));letter-spacing:.16em;text-transform:uppercase;opacity:.75;margin-bottom:calc(30px*var(--sp,1))}
+  .t-hook .hk{font-family:var(--fh);font-weight:900;font-size:calc(140px*var(--tsc,1));line-height:.98;letter-spacing:-.035em;text-wrap:balance}
+  #stage.sz-square .t-hook .hk,#stage.sz-portrait .t-hook .hk{font-size:calc(124px*var(--tsc,1))}
+  .t-hook .sub{font-size:calc(36px*var(--tsc,1));line-height:1.45;margin-top:calc(46px*var(--sp,1));max-width:86%;opacity:.9}
+
+  /* ---------- Myth vs Fact ---------- */
+  .t-myth{position:absolute;inset:0;display:flex;flex-direction:column;padding:var(--pad);justify-content:center;gap:calc(30px*var(--sp,1))}
+  .t-myth .pan{border-radius:26px;padding:calc(40px*var(--sp,1)) 44px;position:relative}
+  .t-myth .pan .k{font-weight:800;font-size:calc(27px*var(--tsc,1));letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px}
+  .t-myth .pan .tx{font-family:var(--fh);font-weight:700;font-size:calc(50px*var(--tsc,1));line-height:1.16;letter-spacing:-.015em;text-wrap:balance}
+  .t-myth .m{background:rgba(255,255,255,.13);border:3px solid rgba(255,255,255,.22)}
+  .t-myth .m .k{opacity:.7}
+  .t-myth .m .tx{opacity:.82}
+  .t-myth .fct{background:#fff;color:#14181d}
+  .t-myth .fct .k{color:var(--brand)}
+  #stage.bg-paper .t-myth .m{background:#efece3;border-color:#e0ddd2;color:#5b6270}
+  #stage.bg-paper .t-myth .fct{background:var(--brand);color:#fff}
+  #stage.bg-paper .t-myth .fct .k{color:rgba(255,255,255,.8)}
+
+  /* ---------- Checklist ---------- */
+  .t-check{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:var(--pad)}
+  .t-check .hl{font-family:var(--fh);font-weight:800;font-size:calc(64px*var(--tsc,1));line-height:1.08;letter-spacing:-.02em;margin-bottom:calc(44px*var(--sp,1));text-wrap:balance}
+  .t-check .it{display:flex;align-items:flex-start;gap:24px;margin-top:calc(26px*var(--sp,1));font-size:calc(36px*var(--tsc,1));line-height:1.34}
+  .t-check .it:first-of-type{margin-top:0}
+  .t-check .tick{width:calc(52px*var(--tsc,1));height:calc(52px*var(--tsc,1));border-radius:50%;background:#fff;color:var(--brand);
+    display:flex;align-items:center;justify-content:center;font-weight:900;font-size:calc(28px*var(--tsc,1));flex:0 0 auto;margin-top:2px}
+  #stage.bg-paper .t-check .tick{background:var(--brand);color:#fff}
+  .t-check .sub{font-size:calc(30px*var(--tsc,1));line-height:1.45;margin-top:calc(42px*var(--sp,1));opacity:.85}
+
+  /* ---------- Before / After ---------- */
+  .t-ba{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:var(--pad);gap:calc(26px*var(--sp,1))}
+  .t-ba .cell{border-radius:24px;padding:calc(38px*var(--sp,1)) 42px}
+  .t-ba .cell .k{font-weight:800;font-size:calc(26px*var(--tsc,1));letter-spacing:.15em;text-transform:uppercase;margin-bottom:14px;opacity:.72}
+  .t-ba .cell .tx{font-family:var(--fh);font-weight:700;font-size:calc(46px*var(--tsc,1));line-height:1.18;text-wrap:balance}
+  .t-ba .b4{background:rgba(255,255,255,.12);border:3px solid rgba(255,255,255,.2)}
+  .t-ba .b4 .tx{opacity:.8}
+  .t-ba .aft{background:#fff;color:#14181d}
+  .t-ba .aft .k{color:var(--brand);opacity:1}
+  #stage.bg-paper .t-ba .b4{background:#efece3;border-color:#e0ddd2;color:#5b6270}
+  #stage.bg-paper .t-ba .aft{background:var(--brand);color:#fff}
+  .t-ba .arw{align-self:center;font-size:calc(46px*var(--tsc,1));font-weight:900;opacity:.6;line-height:1}
+
+  /* ---------- Feature (icon + points) ---------- */
+  .t-feat{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:var(--pad)}
+  .t-feat .hl{font-family:var(--fh);font-weight:800;font-size:calc(70px*var(--tsc,1));line-height:1.06;letter-spacing:-.02em;text-wrap:balance}
+  .t-feat .sub{font-size:calc(31px*var(--tsc,1));line-height:1.45;margin-top:calc(22px*var(--sp,1));opacity:.9;max-width:88%}
+  .t-feat .pts{margin-top:calc(52px*var(--sp,1));display:flex;flex-direction:column;gap:calc(28px*var(--sp,1))}
+  .t-feat .p{display:flex;align-items:flex-start;gap:22px;font-size:calc(33px*var(--tsc,1));line-height:1.34}
+  .t-feat .p .n{width:calc(54px*var(--tsc,1));height:calc(54px*var(--tsc,1));border-radius:14px;background:rgba(255,255,255,.16);
+    border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-weight:800;font-size:calc(26px*var(--tsc,1));flex:0 0 auto}
+  #stage.bg-paper .t-feat .p .n{background:var(--brand);border-color:var(--brand);color:#fff}
+
+  /* ---------- Photo Card (photo + caption band) ---------- */
+  .t-pcard{position:absolute;inset:0;display:flex;flex-direction:column;padding:var(--pad);gap:0}
+  .t-pcard .ph{flex:1;position:relative;min-height:0;overflow:hidden;border-radius:24px 24px 0 0;background:#20242b}
+  .t-pcard .ph .ph-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:36px;font-weight:600}
+  .t-pcard .band{flex:0 0 auto;background:#fff;color:#14181d;border-radius:0 0 24px 24px;padding:calc(38px*var(--sp,1)) 40px}
+  #stage.bg-paper .t-pcard .band{background:var(--brand);color:#fff}
+  .t-pcard .band .hl{font-family:var(--fh);font-weight:800;font-size:calc(50px*var(--tsc,1));line-height:1.1;letter-spacing:-.02em;text-wrap:balance}
+  .t-pcard .band .sub{font-size:calc(28px*var(--tsc,1));line-height:1.4;margin-top:calc(16px*var(--sp,1));opacity:.8}
+
+  /* ---------- Framed (gallery frame) ---------- */
+  .t-framed{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(var(--pad)*1.15)}
+  .t-framed .fr{width:100%;flex:1;min-height:0;background:#fff;padding:26px;border-radius:8px;display:flex}
+  #stage.bg-paper .t-framed .fr{background:#fff;box-sizing:border-box;border:1px solid #e5e0d4}
+  .t-framed .ph{flex:1;position:relative;overflow:hidden;background:#20242b}
+  .t-framed .ph .ph-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:34px;font-weight:600}
+  .t-framed .cap{margin-top:calc(34px*var(--sp,1));text-align:center;width:100%}
+  .t-framed .cap .hl{font-family:var(--fh);font-weight:800;font-size:calc(48px*var(--tsc,1));line-height:1.12;letter-spacing:-.02em;text-wrap:balance}
+  .t-framed .cap .attr{font-size:calc(27px*var(--tsc,1));margin-top:calc(14px*var(--sp,1));opacity:.75}
+
+  /* ---------- Voices (chat thread) ---------- */
+  .t-says{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:var(--pad);gap:calc(20px*var(--sp,1))}
+  .t-says .hl{font-family:var(--fh);font-weight:800;font-size:calc(50px*var(--tsc,1));letter-spacing:-.02em;margin-bottom:calc(18px*var(--sp,1))}
+  .t-says .bub{max-width:80%;padding:26px 32px;border-radius:26px;font-size:calc(32px*var(--tsc,1));line-height:1.36}
+  .t-says .bub.them{align-self:flex-start;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.24);border-bottom-left-radius:8px}
+  .t-says .bub.you{align-self:flex-end;background:#fff;color:#14181d;border-bottom-right-radius:8px}
+  #stage.bg-paper .t-says .bub.them{background:#efece3;border-color:#e0ddd2;color:#3a4150}
+  #stage.bg-paper .t-says .bub.you{background:var(--brand);color:#fff}
+
   /* ---------- Photo Grid ---------- */
   .t-grid{position:absolute;inset:0;display:flex;flex-direction:column}
   .t-grid .gwrap{flex:1;display:grid;gap:10px;min-height:0;padding:0}
@@ -503,6 +626,7 @@
           <svg class="car" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9aa1ab" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg></div>
         <div class="acc-body">
           <button class="btn pri" id="btn-export2">Download PNG</button>
+          <button class="btn" id="btn-copy" type="button" style="margin-top:8px">📋 Copy image to clipboard</button>
           <button class="btn" id="btn-anim" type="button" style="margin-top:8px">🎬 Preview animation</button>
           <div class="anim-len-row"><span>Video length</span><b id="anim-dur">4.0s</b></div>
           <input id="anim-len" type="range" min="3" max="20" step="0.5" value="4">
@@ -549,6 +673,15 @@ const ICO = {
   ann:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l16-6v14L3 13v-2zM7 14v4a2 2 0 0 0 4 0v-3"/></svg>',
   poster:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V5h16v2M12 5v14M8 19h8"/></svg>',
   grid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>',
+  rail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h4M4 12h9M4 17h6M17 5v14"/></svg>',
+  hook:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12M12 19a3 3 0 1 1-3-3"/><path d="M8 7l4-4 4 4"/></svg>',
+  myth:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="7" rx="1.5"/><rect x="3" y="13" width="18" height="7" rx="1.5"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7l2 2 3-3M4 15l2 2 3-3M13 8h7M13 16h7"/></svg>',
+  ba:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="8" height="12" rx="1.5"/><rect x="14" y="6" width="8" height="12" rx="1.5"/><path d="M10.5 12h3" stroke-linecap="round"/></svg>',
+  feat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="7" r="2.5"/><circle cx="6" cy="17" r="2.5"/><path d="M11 7h9M11 17h9"/></svg>',
+  pcard:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 15h18"/><circle cx="9" cy="9.5" r="1.6"/></svg>',
+  framed:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="14" rx="1"/><rect x="7" y="6" width="10" height="8" rx=".5"/><path d="M8 21h8" stroke-linecap="round"/></svg>',
+  says:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H7l-4 3z"/><path d="M17 9h2a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2l-3 3v-3"/></svg>',
 };
 
 const TPLS = {
@@ -581,6 +714,40 @@ const TPLS = {
   poster:{ name:'Headline Poster', desc:'One big statement — on brand color or a photo', bgs:['brand','deep','paper','photo'],
     fields:[ ['headline','Statement','Made in New Hampshire. Hired in New Hampshire.'],
              ['support','Supporting line <span class="opt">(optional)</span>','Our graduates power the state’s hospitals, schools, mills, and main streets.'] ] },
+  rail:{ name:'Stat Rail', desc:'Three quick numbers in a row', bgs:['brand','deep','paper','photo'],
+    fields:[ ['headline','Headline <span class="opt">(optional)</span>','The year in outcomes'],
+             ['s1v','Number 1','93%'], ['s1l','Label 1','working or in grad school within six months'],
+             ['s2v','Number 2','78%'], ['s2l','Label 2','stay and work in New Hampshire'],
+             ['s3v','Number 3','1,200'], ['s3l','Label 3','internships with NH employers last year'] ] },
+  hook:{ name:'Hook', desc:'One scroll-stopping line', bgs:['brand','deep','paper','photo'],
+    fields:[ ['tag','Kicker <span class="opt">(optional)</span>','Career Outcomes'],
+             ['headline','The hook','Your next hire is already in our labs.'],
+             ['support','Supporting line <span class="opt">(optional)</span>','Meet them at the fall career fair — 400 students, 120 employers.'] ] },
+  myth:{ name:'Myth vs Fact', desc:'Correct the record in two panels', bgs:['brand','deep','paper'],
+    fields:[ ['tag','Tag <span class="opt">(optional)</span>','Setting the record straight'],
+             ['myth','The myth','Graduates all leave New Hampshire for bigger markets.'],
+             ['fact','The fact','Most stay — and they staff the hospitals, schools, and mills we all rely on.'] ] },
+  check:{ name:'Checklist', desc:'Ticked items that build a case', bgs:['brand','deep','paper'],
+    fields:[ ['headline','Title','What an employer partnership includes'],
+             ['items','Items <span class="opt">(one per line)</span>','Interns matched to real projects\nCo-designed course content\nFirst look at graduating talent\nA named seat on our advisory board'],
+             ['support','Closing line <span class="opt">(optional)</span>','Start with one intern. Most of our partners never stop.'] ] },
+  ba:{ name:'Before / After', desc:'Two states, one journey', bgs:['brand','deep','paper'],
+    fields:[ ['tag','Tag <span class="opt">(optional)</span>','Student Story'],
+             ['before','Before','Started as a first-generation student unsure a lab career was possible.'],
+             ['after','After','Now runs quality control for a Nashua medical device manufacturer.'] ] },
+  feat:{ name:'Feature', desc:'A program or offer, with numbered points', bgs:['brand','deep','paper','photo'],
+    fields:[ ['headline','Feature name','The Manufacturing Pathway'],
+             ['support','Summary <span class="opt">(optional)</span>','Two years of coursework built with the employers who do the hiring.'],
+             ['items','Points <span class="opt">(one per line)</span>','Paid co-op from semester two\nEquipment matched to the shop floor\nA hiring interview built into the final term'] ] },
+  pcard:{ name:'Photo Card', desc:'Photo with a caption band', bgs:['brand','deep','paper'],
+    fields:[ ['headline','Caption headline','Clinical hours from year one'],
+             ['support','Supporting line <span class="opt">(optional)</span>','Nursing students at Cheshire Medical Center.'] ] },
+  framed:{ name:'Framed', desc:'Gallery frame with a caption underneath', bgs:['brand','deep','paper'],
+    fields:[ ['headline','Caption','Marine science students on Great Bay'],
+             ['attr','Credit <span class="opt">(optional)</span>','Photo · UNH Marine Docking Facility'] ] },
+  says:{ name:'Voices', desc:'A short exchange, told as messages', bgs:['brand','deep','paper'],
+    fields:[ ['headline','Title <span class="opt">(optional)</span>','What employers ask us'],
+             ['msgs','Messages <span class="opt">(one per line — alternates sides)</span>','Do your grads need six months of training first?\nNo. Most are productive in week one.\nHow do we get in front of them?\nCome to the career fair — we will make introductions.'] ] },
 };
 
 const SIZES = {
@@ -674,6 +841,15 @@ const THUMB = {
   ann:'<i class="tag"></i><i class="l1"></i><i class="l2"></i><i class="c1"></i><i class="c2"></i>',
   poster:'<i class="bar"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i>',
   grid:'<i class="g1"></i><i class="g2"></i><i class="g3"></i><i class="bar2"></i><i class="l1"></i>',
+  rail:'<b>93%</b><i class="ln1"></i><i class="ln2"></i><i class="ln3"></i>',
+  hook:'<b>“</b><i class="l1"></i><i class="l2"></i>',
+  myth:'<i class="p1"></i><i class="p2"></i>',
+  check:'<i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i>',
+  ba:'<i class="p1"></i><i class="p2"></i>',
+  feat:'<i class="n1"></i><i class="n2"></i><i class="l1"></i><i class="l2"></i>',
+  pcard:'<i class="ph"></i><i class="band"></i>',
+  framed:'<i class="fr"></i><i class="ph"></i><i class="cap"></i>',
+  says:'<i class="b1"></i><i class="b2"></i><i class="b3"></i>',
 };
 function renderCards(){
   const el = $('tpl-cards'); el.innerHTML='';
@@ -687,7 +863,10 @@ function renderCards(){
 }
 function draftSnippet(st){
   const f = st.fields||{};
-  return f.headline || f.quote || (f.value ? f.value+' '+(f.label||'') : '') || '';
+  return f.headline || f.quote || f.fact || f.before
+    || (f.value ? f.value+' '+(f.label||'') : '')
+    || (f.s1v ? f.s1v+' '+(f.s1l||'') : '')
+    || (f.msgs ? String(f.msgs).split('\n')[0] : '') || '';
 }
 function renderContinue(){
   const el = $('continue'); el.innerHTML='';
@@ -723,10 +902,10 @@ function buildPanel(){
   const F = $('fields'); F.innerHTML='';
   for(const [key,lab,ph] of T.fields){
     const l = document.createElement('label'); l.innerHTML = lab; F.appendChild(l);
-    const multi = (key==='quote'||key==='support');
+    const multi = ['quote','support','items','msgs','myth','fact','before','after'].includes(key);
     const inp = document.createElement(multi?'textarea':'input');
     if(!multi) inp.type='text';
-    if(multi) inp.rows = key==='quote'?3:2;
+    if(multi) inp.rows = (key==='items'||key==='msgs') ? 5 : (key==='quote'?3:2);
     inp.placeholder = ph;
     inp.value = S.fields[key]||'';
     let chipRow = null;
@@ -753,7 +932,7 @@ function buildPanel(){
   ST.appendChild(seg('Size', Object.keys(SIZES).map(k=>[k,SIZES[k].name]), S.size, v=>{ S.size=v; render(); }));
   if(T.bgs) ST.appendChild(seg('Background', T.bgs.map(b=>[b,{brand:'Brand',deep:'Deep',paper:'Paper',photo:'📷 Photo'}[b]]), S.bg, v=>{ S.bg=v; buildPanel(); render(); }));
   // photo controls — for photo/split templates, and for any template on a photo background
-  const usesPhoto = tpl==='photo' || tpl==='split' || (TPLS[tpl].bgs && S.bg==='photo');
+  const usesPhoto = tpl==='photo' || tpl==='split' || tpl==='pcard' || tpl==='framed' || (TPLS[tpl].bgs && S.bg==='photo');
   if(usesPhoto){
     const l=document.createElement('label'); l.textContent='Photo'; ST.appendChild(l);
     const f=document.createElement('input'); f.type='file'; f.accept='image/*';
@@ -779,19 +958,40 @@ function buildPanel(){
     S.photos = S.photos || [];
     const l=document.createElement('label'); l.innerHTML='Photos <span class="opt">(2–4 — pick several at once)</span>'; ST.appendChild(l);
     const f=document.createElement('input'); f.type='file'; f.accept='image/*'; f.multiple=true;
+    // photos ADD to the set (one at a time or several at once) up to 4
     f.onchange = e => {
-      const files=[...e.target.files].slice(0,4); let done=0; const slots=[];
-      files.forEach((file,i)=>readImage(file, img=>{ slots[i]=img; if(++done===files.length){
-        S.photos = slots.filter(Boolean).slice(0,4); buildPanel(); render(); } }));
+      const room = 4 - S.photos.length;
+      const files=[...e.target.files].slice(0, Math.max(0,room));
+      if(!files.length){ f.value=''; return; }
+      let done=0; const slots=[];
+      files.forEach((file,i)=>readImage(file, img=>{ slots[i]=img;
+        if(++done===files.length){
+          S.photos = S.photos.concat(slots.filter(Boolean)).slice(0,4);
+          buildPanel(); render();
+        } }));
     };
     ST.appendChild(f);
+    const note=document.createElement('div'); note.className='foot-note'; note.style.textAlign='left';
+    note.textContent = S.photos.length>=4 ? 'Four photos added — remove one to add another.'
+      : S.photos.length+' of 4 added — pick more to add to the set.';
+    ST.appendChild(note);
     if(S.photos.length) ST.appendChild(photoAdjustControls());
     if(S.photos.length){
       const pv=document.createElement('div'); pv.className='pc-preview';
-      pv.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">'
-        + S.photos.map(p=>'<img src="'+p+'" style="height:46px;width:46px;object-fit:cover;border-radius:6px">').join('')
-        + '</div><button class="btn" type="button" style="margin-top:8px">Clear photos</button>';
-      pv.querySelector('button').onclick=()=>{ S.photos=[]; buildPanel(); render(); };
+      const strip=document.createElement('div');
+      strip.style.cssText='display:flex;gap:8px;flex-wrap:wrap;justify-content:center';
+      S.photos.forEach((p,i)=>{
+        const cell=document.createElement('div'); cell.style.cssText='position:relative';
+        cell.innerHTML='<img src="'+p+'" style="height:52px;width:52px;object-fit:cover;border-radius:7px;display:block">'
+          +'<button type="button" title="Remove" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;border:none;background:#c0392b;color:#fff;font-size:12px;line-height:1;cursor:pointer">×</button>';
+        cell.querySelector('button').onclick=()=>{ S.photos.splice(i,1); buildPanel(); render(); };
+        strip.appendChild(cell);
+      });
+      pv.appendChild(strip);
+      const clr=document.createElement('button'); clr.className='btn'; clr.type='button';
+      clr.style.marginTop='10px'; clr.textContent='Clear all photos';
+      clr.onclick=()=>{ S.photos=[]; buildPanel(); render(); };
+      pv.appendChild(clr);
       ST.appendChild(pv);
     }
   }
@@ -935,6 +1135,7 @@ function spacingScale(){
   if(S.size==='wide') s*=0.85;
   return Math.round(Math.max(0.7,Math.min(2.4,s))*100)/100;
 }
+const linesOf = s => String(s||'').split('\n').map(x=>x.trim()).filter(Boolean);
 function f(k,ph){ return S.fields[k] || ph || ''; }
 function phF(k){ const T=TPLS[tpl]; const row=T.fields.find(r=>r[0]===k); return row?row[2]:''; }
 function val(k){ return S.fields[k] || phF(k); }
@@ -1064,6 +1265,71 @@ async function render(){
       + '</div></div>'
       + logoDiv('tr',cb(logo));
   }
+  else if(tpl==='rail'){
+    const row=(v,l)=> (val(v)||val(l)) ? '<div class="r"><span class="rv">'+esc(val(v))+'</span><span class="rl">'+esc(val(l))+'</span></div>' : '';
+    html = pbg + '<div class="t-rail">'
+      + (val('headline')?'<div class="hl">'+esc(val('headline'))+'</div>':'')
+      + '<div class="rows">'+row('s1v','s1l')+row('s2v','s2l')+row('s3v','s3l')+'</div>'
+      + '</div>'+logoDiv('tl',cb(paper?colorLogo:logo))+usnhLine;
+  }
+  else if(tpl==='hook'){
+    html = pbg + '<div class="t-hook">'
+      + (val('tag')?'<div class="kick">'+esc(val('tag'))+'</div>':'')
+      + '<div class="hk">'+esc(val('headline'))+'</div>'
+      + (val('support')?'<div class="sub">'+esc(val('support'))+'</div>':'')
+      + '</div>'+logoDiv('br',cb(paper?colorLogo:logo))+usnhLine;
+  }
+  else if(tpl==='myth'){
+    html = '<div class="t-myth">'
+      + (val('tag')?'<span class="st-tag" style="align-self:flex-start;margin-bottom:14px">'+esc(val('tag'))+'</span>':'')
+      + '<div class="pan m"><div class="k">Myth</div><div class="tx">'+esc(val('myth'))+'</div></div>'
+      + '<div class="pan fct"><div class="k">Fact</div><div class="tx">'+esc(val('fact'))+'</div></div>'
+      + '</div>'+logoDiv('br',cb(paper?colorLogo:logo));
+  }
+  else if(tpl==='check'){
+    const items=linesOf(val('items')).map(t=>'<div class="it"><span class="tick">✓</span><span>'+esc(t)+'</span></div>').join('');
+    html = '<div class="t-check">'
+      + '<div class="hl">'+esc(val('headline'))+'</div>'+items
+      + (val('support')?'<div class="sub">'+esc(val('support'))+'</div>':'')
+      + '</div>'+logoDiv('br',cb(paper?colorLogo:logo))+usnhLine;
+  }
+  else if(tpl==='ba'){
+    html = '<div class="t-ba">'
+      + (val('tag')?'<span class="st-tag" style="align-self:flex-start;margin-bottom:10px">'+esc(val('tag'))+'</span>':'')
+      + '<div class="cell b4"><div class="k">Before</div><div class="tx">'+esc(val('before'))+'</div></div>'
+      + '<div class="arw">↓</div>'
+      + '<div class="cell aft"><div class="k">After</div><div class="tx">'+esc(val('after'))+'</div></div>'
+      + '</div>'+logoDiv('br',cb(paper?colorLogo:logo));
+  }
+  else if(tpl==='feat'){
+    const pts=linesOf(val('items')).map((t,i)=>'<div class="p"><span class="n">'+(i+1)+'</span><span>'+esc(t)+'</span></div>').join('');
+    html = pbg + '<div class="t-feat">'
+      + '<div class="hl">'+esc(val('headline'))+'</div>'
+      + (val('support')?'<div class="sub">'+esc(val('support'))+'</div>':'')
+      + (pts?'<div class="pts">'+pts+'</div>':'')
+      + '</div>'+logoDiv('br',cb(paper?colorLogo:logo))+usnhLine;
+  }
+  else if(tpl==='pcard'){
+    html = '<div class="t-pcard">'
+      + '<div class="ph">'+photoLayer+phEmpty+'</div>'
+      + '<div class="band"><div class="hl">'+esc(val('headline'))+'</div>'
+      + (val('support')?'<div class="sub">'+esc(val('support'))+'</div>':'')+'</div>'
+      + '</div>'+logoDiv('tl',cb(logo));
+  }
+  else if(tpl==='framed'){
+    html = '<div class="t-framed">'
+      + '<div class="fr"><div class="ph">'+photoLayer+phEmpty+'</div></div>'
+      + '<div class="cap"><div class="hl">'+esc(val('headline'))+'</div>'
+      + (val('attr')?'<div class="attr">'+esc(val('attr'))+'</div>':'')+'</div>'
+      + '</div>'+logoDiv('tl',cb(paper?colorLogo:logo));
+  }
+  else if(tpl==='says'){
+    const bubbles=linesOf(val('msgs')).map((t,i)=>'<div class="bub '+(i%2?'you':'them')+'">'+esc(t)+'</div>').join('');
+    html = '<div class="t-says">'
+      + (val('headline')?'<div class="hl">'+esc(val('headline'))+'</div>':'')
+      + bubbles
+      + '</div>'+logoDiv('br',cb(paper?colorLogo:logo));
+  }
   st.innerHTML = html;
 
   // quote/ann/poster: logo bottom-right, USNH line bottom-left — stat/photo keep logo top-left
@@ -1088,9 +1354,13 @@ window.addEventListener('resize', ()=>{ if(tpl) sizeStage(); });
 /* ================= caption + export ================= */
 function buildCaption(){
   const p=[]; const fdl=S.fields;
-  const hl = fdl.headline||fdl.quote||((fdl.value||'')&&((fdl.value||'')+' — '+(fdl.label||'')));
+  const hl = fdl.headline||fdl.quote||fdl.fact||fdl.after
+    ||((fdl.value||'')&&((fdl.value||'')+' — '+(fdl.label||'')))
+    ||(fdl.s1v?fdl.s1v+' '+(fdl.s1l||''):'')
+    ||linesOf(fdl.msgs)[0]||'';
   if(hl) p.push(hl);
   if(fdl.support) p.push(fdl.support);
+  if(fdl.items) p.push(linesOf(fdl.items).map(x=>'• '+x).join('\n'));
   if(fdl.attr||fdl.name) p.push('— '+(fdl.attr||fdl.name+(fdl.role?', '+fdl.role:'')));
   p.push('A University System of New Hampshire story.');
   if(partnerOn() && partner.name) p.push('In partnership with '+partner.name+'.');
@@ -1123,6 +1393,27 @@ async function exportPNG(){
 $('btn-export').addEventListener('click', exportPNG);
 $('btn-export2').addEventListener('click', exportPNG);
 
+/* Copy the visual straight to the clipboard — paste into Slack, Teams, email */
+$('btn-copy').addEventListener('click', async ()=>{
+  const btn=$('btn-copy'), old=btn.textContent;
+  btn.disabled=true; btn.textContent='Copying…';
+  const st=$('stage'), sz=SIZES[S.size], prev=st.style.transform;
+  st.style.transform='none';
+  try{
+    const canvas=await html2canvas(st,{width:sz.w,height:sz.h,scale:1,backgroundColor:null,useCORS:true});
+    const blob=await new Promise(r=>canvas.toBlob(r,'image/png'));
+    if(!navigator.clipboard || !window.ClipboardItem) throw new Error('unsupported');
+    await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+    btn.textContent='Copied ✓';
+  }catch(e){
+    console.error(e);
+    btn.textContent='Copy unavailable — use Download';
+  }finally{
+    st.style.transform=prev;
+    setTimeout(()=>{ btn.textContent=old; btn.disabled=false; },1900);
+  }
+});
+
 /* ================= AI (bring-your-own Anthropic key, stored locally) ================= */
 const TAG_PRESETS = ['Career Outcomes','Student Story','Employer Spotlight','Alumni','Hands-On Learning','Research','Save the Date','Community Impact'];
 const AI_KEY_LS = 'usnhStudio.apiKey', AI_MODEL = 'claude-opus-4-8';
@@ -1143,10 +1434,19 @@ function genSystem(){
     +'- ann: tag (eyebrow, <=20), headline (<=55), chip1/chip2/chip3 (short details: a date, a time, a place), support (<=150, optional), cta (optional)\n'
     +'- poster: headline (<=60, one bold statement), support (<=140, optional)\n'
     +'- grid: tag (<=22, optional), headline (<=45), support (<=120, optional) — for a set of 2-4 photos, so write copy that covers a group of moments\n'
+    +'- rail: headline (<=40, optional), s1v/s2v/s3v (three short numbers), s1l/s2l/s3l (their labels, <=60 each)\n'
+    +'- hook: tag (kicker, <=22, optional), headline (<=52, one scroll-stopping line), support (<=130, optional)\n'
+    +'- myth: tag (optional), myth (the misconception, <=110), fact (the correction, <=130)\n'
+    +'- check: headline (<=50), items (3-5 lines separated by \\n, <=70 each), support (<=110, optional)\n'
+    +'- ba: tag (optional), before (<=110), after (<=110) — a person or program before and after\n'
+    +'- feat: headline (feature name, <=42), support (<=120, optional), items (3 lines separated by \\n, <=70 each)\n'
+    +'- pcard: headline (<=45), support (<=90, optional) — caption band under a photo\n'
+    +'- framed: headline (<=50), attr (photo credit, optional)\n'
+    +'- says: headline (<=40, optional), msgs (4-6 lines separated by \\n, alternating question then answer, <=90 each)\n'
     +'Only fill fields that belong to the chosen template. When a tag fits one of these, prefer it verbatim: '+TAG_PRESETS.join(', ')+'.\n'
     +'If you invent a statistic, keep it plausible and name a realistic source (e.g. "First-Destination Survey") so the user can verify before posting.'
     +(partnerOn() ? '\nThis visual is co-branded with employer partner "'+(partner.name||'the partner company')+'". Tell the employer-partnership side of the story: hiring, internships, co-designed projects, the workforce pipeline between the campus and the company.' : '')
-    +'\nRespond with ONLY a JSON object, no other text, in exactly this shape: {"template":"stat|photo|split|quote|ann|poster|grid","fields":{...}} where fields contains only string values for the chosen template’s field keys (value,label,support,source,tag,headline,attr,quote,name,role,chip1,chip2,chip3,cta).';
+    +'\nRespond with ONLY a JSON object, no other text, in exactly this shape: {"template":"<one of the ids above>","fields":{...}} where fields contains only string values for the chosen template’s field keys. Multi-line fields (items, msgs) use \\n between lines.';
 }
 
 function applyGenerated(obj){
