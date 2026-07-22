@@ -261,6 +261,22 @@
   .idea .hint{font-size:11.5px;color:var(--ink3);margin-top:9px;line-height:1.5}
   .idea .hint.warn{color:#e0a05a}
 
+  /* ============ voice-to-text mic ============ */
+  .mic-wrap{position:relative}
+  .mic-wrap textarea{padding-right:48px}
+  .mic-btn{position:absolute;right:8px;bottom:8px;width:34px;height:34px;border-radius:9px;
+    border:1px solid var(--line2);background:var(--bg2);color:var(--ink2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s var(--ease)}
+  .mic-btn svg{width:17px;height:17px}
+  .mic-btn:hover{border-color:var(--brand);color:var(--ink);transform:translateY(-1px)}
+  .mic-btn:active{transform:scale(.94)}
+  .mic-btn.rec{background:#c0392b;border-color:#c0392b;color:#fff;animation:micPulse 1.3s ease-in-out infinite}
+  @keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(192,57,43,.55)}50%{box-shadow:0 0 0 7px rgba(192,57,43,0)}}
+  .mic-btn[disabled]{opacity:.38;cursor:not-allowed}
+  /* light variant inside the workspace panel */
+  .ai-box .mic-btn{background:#fff;border-color:#d8dade;color:#6b7280}
+  .ai-box .mic-btn:hover{border-color:var(--brand);color:var(--brand)}
+  .ai-box .mic-btn.rec{background:#c0392b;border-color:#c0392b;color:#fff}
+
   /* ============ AI: workspace box ============ */
   .ai-box{border:1px dashed #d3d5da;border-radius:12px;padding:12px 14px;margin-bottom:14px;background:var(--panel-bg)}
   .ai-box label{margin-top:0}
@@ -644,8 +660,13 @@
     </div>
 
     <div class="idea">
-      <div class="idea-h">✨ Start from an idea <span class="idea-sub">— describe it, AI drafts the visual</span></div>
-      <textarea id="idea-text" placeholder="e.g. 93% of Keene State grads are working or in grad school within six months — and most of them stay in New Hampshire."></textarea>
+      <div class="idea-h">✨ Start from an idea <span class="idea-sub">— describe it or speak it, AI drafts the visual</span></div>
+      <div class="mic-wrap">
+        <textarea id="idea-text" placeholder="e.g. 93% of Keene State grads are working or in grad school within six months — and most of them stay in New Hampshire."></textarea>
+        <button class="mic-btn" id="idea-mic" type="button" aria-label="Dictate with your voice" title="Dictate with your voice">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+        </button>
+      </div>
       <div class="irow">
         <select id="idea-tpl"><option value="">Auto — pick the best template</option></select>
         <button class="go" id="idea-go">Draft it →</button>
@@ -682,8 +703,13 @@
           <svg class="car" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9aa1ab" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg></div>
         <div class="acc-body">
           <div class="ai-box">
-            <label>✨ Write it with AI <span class="opt">— or fill the fields below yourself</span></label>
-            <textarea id="ai-idea" rows="2" placeholder="Describe what this post should say…"></textarea>
+            <label>✨ Write it with AI <span class="opt">— type or speak it, or fill the fields yourself</span></label>
+            <div class="mic-wrap">
+              <textarea id="ai-idea" rows="2" placeholder="Describe what this post should say…"></textarea>
+              <button class="mic-btn" id="ai-mic" type="button" aria-label="Dictate with your voice" title="Dictate with your voice">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+              </button>
+            </div>
             <div class="row2" style="margin-top:8px">
               <button class="btn" id="ai-gen" type="button">✨ Draft from idea</button>
               <button class="btn" id="ai-surprise" type="button">💡 Surprise me</button>
@@ -1632,6 +1658,40 @@ for(const id of ['idea-key','ai-key']){
   el.addEventListener('input', e=>saveAiKey(e.target.value));
 }
 syncKeyRows();
+
+/* ================= voice-to-text (browser Speech Recognition, on-device) ================= */
+function attachMic(taId, btnId){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const ta=$(taId), btn=$(btnId); if(!ta||!btn) return;
+  if(!SR){ btn.disabled=true; btn.title='Voice input needs Chrome or Edge (this browser doesn’t support it)'; return; }
+  let rec=null, listening=false, base='', ph='';
+  function stop(){ listening=false; btn.classList.remove('rec'); btn.setAttribute('aria-pressed','false'); ta.placeholder=ph; rec=null; }
+  btn.addEventListener('click', ()=>{
+    if(listening){ try{ rec.stop(); }catch(e){} return; }
+    rec = new SR(); rec.lang='en-US'; rec.interimResults=true; rec.continuous=true;
+    base = ta.value ? ta.value.replace(/\s+$/,'')+' ' : '';
+    ph = ta.placeholder;
+    rec.onstart=()=>{ listening=true; btn.classList.add('rec'); btn.setAttribute('aria-pressed','true'); ta.placeholder='Listening… speak now'; };
+    rec.onresult=(e)=>{
+      let fin='', interim='';
+      for(let i=e.resultIndex;i<e.results.length;i++){
+        const t=e.results[i][0].transcript;
+        if(e.results[i].isFinal) fin+=t; else interim+=t;
+      }
+      if(fin) base = base + fin.trim() + ' ';
+      ta.value = (base + interim).replace(/^\s+/,'');
+      ta.dispatchEvent(new Event('input',{bubbles:true}));
+    };
+    rec.onerror=(e)=>{
+      if(e.error==='not-allowed'||e.error==='service-not-allowed') btn.title='Microphone blocked — allow mic access in your browser';
+      stop();
+    };
+    rec.onend=stop;
+    try{ rec.start(); }catch(e){ stop(); }
+  });
+}
+attachMic('idea-text','idea-mic');
+attachMic('ai-idea','ai-mic');
 
 /* ================= partner co-brand state ================= */
 const PARTNER_LS='usnhStudio.partner';
