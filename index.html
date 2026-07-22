@@ -75,7 +75,7 @@
   .btn-export:active{transform:translateY(0) scale(.98)}
 
   /* ============ home ============ */
-  .home{max-width:1080px;margin:0 auto;padding:52px 24px 90px;position:relative}
+  .home{max-width:1160px;margin:0 auto;padding:52px 24px 90px;position:relative}
   /* hero band with a subtle dotted texture + campus glow, echoing the campus sites */
   .home-hero{position:relative;margin-bottom:36px}
   .home-hero::before{content:"";position:absolute;right:-40px;top:-70px;width:340px;height:340px;pointer-events:none;
@@ -87,7 +87,7 @@
   .home h1{font-family:var(--fh);font-size:52px;font-weight:800;letter-spacing:-.035em;margin:16px 0 8px;text-wrap:balance;line-height:1.02}
   .home h1 .acc{color:var(--brand);transition:color .5s var(--ease)}
   .home .lede{font-size:16.5px;color:var(--ink2);max-width:600px;margin:0;line-height:1.55}
-  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
   .card{position:relative;border:1px solid var(--line2);border-radius:var(--radius);cursor:pointer;background:linear-gradient(180deg,var(--bg2),#111621);color:var(--ink);
     transition:transform .22s var(--ease),border-color .22s var(--ease),box-shadow .22s var(--ease);
     padding:0;text-align:left;overflow:hidden;display:block;width:100%;box-shadow:var(--shadow-1);
@@ -368,10 +368,13 @@
   .tpl-card b{font-size:13px}.tpl-card span{font-size:11px;color:#9aa1ab}
   .tpl-card.on span{color:#c7ccd2}
 
+  @media(max-width:1040px){
+    .cards{grid-template-columns:repeat(3,1fr)}
+  }
   @media(max-width:900px){
     .home{padding:30px 18px 60px}
     .home h1{font-size:31px}
-    .cards{grid-template-columns:1fr 1fr}
+    .cards{grid-template-columns:repeat(2,1fr)}
     .ws{flex-direction:column;height:auto}
     .panel{width:100%;min-width:0;border-right:none;border-top:1px solid #000;order:2}
     .stage-area{order:1;flex:none;padding:16px;width:100%}
